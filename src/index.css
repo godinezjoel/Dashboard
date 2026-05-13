@@ -1,0 +1,237 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* ── CSS Custom Properties (Theme System) ──────────────────────────────────── */
+:root {
+  /* Default dark theme */
+  --bg-primary: #09090f;
+  --bg-surface: #12131f;
+  --bg-card: #1a1b2e;
+  --bg-elevated: #212235;
+  --border: rgba(139, 92, 246, 0.15);
+  --text-primary: #f1f0ff;
+  --text-secondary: #8b8aad;
+  --text-muted: #4a4968;
+  --accent: #8b5cf6;
+  --accent-glow: rgba(139, 92, 246, 0.3);
+  --accent-subtle: rgba(139, 92, 246, 0.08);
+  --sidebar-width: 240px;
+}
+
+[data-theme="cyberpunk"] {
+  --bg-primary: #05010d;
+  --bg-surface: #0f0a1e;
+  --bg-card: #170f2a;
+  --bg-elevated: #1e1338;
+  --border: rgba(0, 255, 245, 0.15);
+  --text-primary: #e0e0ff;
+  --text-secondary: #9090c0;
+  --text-muted: #404060;
+  --accent: #00fff5;
+  --accent-glow: rgba(0, 255, 245, 0.3);
+  --accent-subtle: rgba(0, 255, 245, 0.08);
+}
+
+[data-theme="forest"] {
+  --bg-primary: #030d06;
+  --bg-surface: #061410;
+  --bg-card: #0a1e14;
+  --bg-elevated: #0f2a1c;
+  --border: rgba(0, 230, 118, 0.15);
+  --text-primary: #c8ffd4;
+  --text-secondary: #7ab888;
+  --text-muted: #2a4030;
+  --accent: #00e676;
+  --accent-glow: rgba(0, 230, 118, 0.3);
+  --accent-subtle: rgba(0, 230, 118, 0.08);
+}
+
+/* ── Base Reset ────────────────────────────────────────────────────────────── */
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html, body, #root {
+  height: 100%;
+  font-family: 'Inter', system-ui, sans-serif;
+}
+
+body {
+  background-color: var(--bg-primary);
+  color: var(--text-primary);
+  font-size: 14px;
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* ── Scrollbar Styling ─────────────────────────────────────────────────────── */
+::-webkit-scrollbar {
+  width: 4px;
+}
+::-webkit-scrollbar-track {
+  background: var(--bg-surface);
+}
+::-webkit-scrollbar-thumb {
+  background: var(--accent);
+  border-radius: 2px;
+  opacity: 0.5;
+}
+
+/* ── Utility Classes ───────────────────────────────────────────────────────── */
+@layer components {
+  /* Cards */
+  .card {
+    @apply rounded-2xl border transition-all duration-200;
+    background: var(--bg-card);
+    border-color: var(--border);
+  }
+
+  .card-elevated {
+    background: var(--bg-elevated);
+    border-color: var(--border);
+    @apply rounded-2xl border;
+  }
+
+  /* Buttons */
+  .btn-primary {
+    @apply px-4 py-2 rounded-xl font-medium text-sm transition-all duration-200 active:scale-95;
+    background: var(--accent);
+    color: var(--bg-primary);
+    box-shadow: 0 0 16px var(--accent-glow);
+  }
+  .btn-primary:hover {
+    filter: brightness(1.15);
+    box-shadow: 0 0 24px var(--accent-glow);
+  }
+
+  .btn-ghost {
+    @apply px-4 py-2 rounded-xl font-medium text-sm transition-all duration-200 active:scale-95;
+    color: var(--text-secondary);
+    background: transparent;
+  }
+  .btn-ghost:hover {
+    background: var(--accent-subtle);
+    color: var(--text-primary);
+  }
+
+  .btn-danger {
+    @apply px-4 py-2 rounded-xl font-medium text-sm transition-all duration-200 active:scale-95
+           bg-red-500/10 text-red-400 hover:bg-red-500/20;
+  }
+
+  /* Form inputs */
+  .input {
+    @apply w-full px-4 py-2.5 rounded-xl text-sm outline-none transition-all duration-200;
+    background: var(--bg-surface);
+    border: 1px solid var(--border);
+    color: var(--text-primary);
+  }
+  .input:focus {
+    border-color: var(--accent);
+    box-shadow: 0 0 0 3px var(--accent-subtle);
+  }
+  .input::placeholder {
+    color: var(--text-muted);
+  }
+
+  /* Text helpers */
+  .text-accent { color: var(--accent); }
+  .text-primary { color: var(--text-primary); }
+  .text-secondary { color: var(--text-secondary); }
+  .text-muted-custom { color: var(--text-muted); }
+
+  /* Divider */
+  .divider {
+    height: 1px;
+    background: var(--border);
+  }
+
+  /* Glow badge */
+  .badge {
+    @apply inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-xs font-medium;
+    background: var(--accent-subtle);
+    color: var(--accent);
+    border: 1px solid var(--accent-glow);
+  }
+}
+
+/* ── Layout ────────────────────────────────────────────────────────────────── */
+.dashboard-grid {
+  display: grid;
+  grid-template-columns: var(--sidebar-width) 1fr;
+  grid-template-rows: 1fr;
+  height: 100vh;
+  overflow: hidden;
+}
+
+/* ── Animations ────────────────────────────────────────────────────────────── */
+@keyframes slideInLeft {
+  from { opacity: 0; transform: translateX(-16px); }
+  to { opacity: 1; transform: translateX(0); }
+}
+
+@keyframes slideInUp {
+  from { opacity: 0; transform: translateY(12px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes shimmer {
+  0% { background-position: -200% center; }
+  100% { background-position: 200% center; }
+}
+
+@keyframes petFloat {
+  0%, 100% { transform: translateY(0px) rotate(0deg); }
+  33% { transform: translateY(-4px) rotate(-2deg); }
+  66% { transform: translateY(-2px) rotate(2deg); }
+}
+
+@keyframes criticalPulse {
+  0%, 100% { transform: scale(1); filter: drop-shadow(0 0 4px #ef4444); }
+  50% { transform: scale(1.05); filter: drop-shadow(0 0 12px #ef4444); }
+}
+
+@keyframes xpGain {
+  0% { opacity: 1; transform: translateY(0) scale(1); }
+  100% { opacity: 0; transform: translateY(-32px) scale(0.8); }
+}
+
+.animate-slide-in-left { animation: slideInLeft 0.3s ease-out; }
+.animate-slide-in-up { animation: slideInUp 0.25s ease-out; }
+.animate-pet-float { animation: petFloat 3.5s ease-in-out infinite; }
+.animate-pet-critical { animation: criticalPulse 1s ease-in-out infinite; }
+.animate-xp-gain { animation: xpGain 1.2s ease-out forwards; }
+
+/* Shimmer skeleton loading */
+.skeleton {
+  background: linear-gradient(
+    90deg,
+    var(--bg-card) 25%,
+    var(--bg-elevated) 50%,
+    var(--bg-card) 75%
+  );
+  background-size: 200% 100%;
+  animation: shimmer 1.5s infinite;
+  border-radius: 8px;
+}
+
+/* ── Pet sprite ─────────────────────────────────────────────────────────────── */
+.pet-emoji {
+  display: inline-block;
+  user-select: none;
+  line-height: 1;
+}
+
+/* Sidebar glow indicator */
+.nav-item-active {
+  background: var(--accent-subtle);
+  color: var(--accent);
+  border-left: 2px solid var(--accent);
+  box-shadow: inset 0 0 20px var(--accent-subtle);
+}
