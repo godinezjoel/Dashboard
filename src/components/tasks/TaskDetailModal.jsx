@@ -68,20 +68,26 @@ export default function TaskDetailModal({ task, isOpen, onClose }) {
     }
   }
 
-  function handleAddSubtask(e) {
+  async function handleAddSubtask(e) {
     e.preventDefault();
     const val = newSubtask.trim();
     if (!val) return;
-    setSubtasks([...subtasks, { id: crypto.randomUUID(), title: val, is_done: false }]);
+    const newSubtasks = [...subtasks, { id: crypto.randomUUID(), title: val, is_done: false }];
+    setSubtasks(newSubtasks);
     setNewSubtask('');
+    await updateTask(task.id, { subtasks: newSubtasks });
   }
 
-  function toggleSubtask(id) {
-    setSubtasks(subtasks.map(s => s.id === id ? { ...s, is_done: !s.is_done } : s));
+  async function toggleSubtask(id) {
+    const newSubtasks = subtasks.map(s => s.id === id ? { ...s, is_done: !s.is_done } : s);
+    setSubtasks(newSubtasks);
+    await updateTask(task.id, { subtasks: newSubtasks });
   }
 
-  function deleteSubtask(id) {
-    setSubtasks(subtasks.filter(s => s.id !== id));
+  async function deleteSubtask(id) {
+    const newSubtasks = subtasks.filter(s => s.id !== id);
+    setSubtasks(newSubtasks);
+    await updateTask(task.id, { subtasks: newSubtasks });
   }
 
   const completedSubtasks = subtasks.filter(s => s.is_done).length;

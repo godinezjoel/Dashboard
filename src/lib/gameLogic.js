@@ -71,10 +71,14 @@ export function xpToNextLevel(xp) {
  * @returns {number} Current health (0–100), rounded to 2 decimal places
  */
 export function calculateCurrentHealth(lastFed, storedHealth) {
+  if (!lastFed) return storedHealth || 0;
+  
   const lastFedDate = lastFed instanceof Date ? lastFed : new Date(lastFed);
+  if (isNaN(lastFedDate.getTime())) return storedHealth || 0;
+
   const nowMs = Date.now();
   const elapsedHours = (nowMs - lastFedDate.getTime()) / (1000 * 60 * 60);
-  const decayed = elapsedHours * HEALTH_DECAY_PER_HOUR;
+  const decayed = Math.max(0, elapsedHours * HEALTH_DECAY_PER_HOUR); // ensure no negative decay
   const current = storedHealth - decayed;
   return Math.max(0, Math.min(100, Math.round(current * 100) / 100));
 }

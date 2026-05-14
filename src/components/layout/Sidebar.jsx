@@ -11,7 +11,10 @@ import {
   AlertTriangle,
   Activity,
   Sun,
-  Moon
+  Moon,
+  Wrench,
+  Plus,
+  Minus
 } from 'lucide-react';
 import { useGame } from '../../context/GameContext';
 import { calculateLevelPercent, xpToNextLevel, getPetHealthState, calculateCurrentHealth } from '../../lib/gameLogic';
@@ -27,7 +30,7 @@ const DASHBOARD_ITEMS = [
 ];
 
 export default function Sidebar() {
-  const { profile, activePet, signOut, theme, setTheme } = useGame();
+  const { profile, activePet, signOut, theme, setTheme, devUpdateProfile } = useGame();
   const navigate = useNavigate();
 
   const levelPct = profile ? calculateLevelPercent(profile.xp) : 0;
@@ -214,6 +217,43 @@ export default function Sidebar() {
             )}
           </NavLink>
         ))}
+
+        <div className="mb-2 mt-6 px-3 flex items-center gap-2 text-[10px] font-bold tracking-wider text-purple-500 uppercase">
+          <Wrench size={10} /> Dev Tools
+        </div>
+        <div className="px-3 space-y-2">
+          {/* XP & Coins */}
+          <div className="flex gap-2">
+            <button 
+              onClick={() => devUpdateProfile({ xpDelta: 50, coinsDelta: 50 })}
+              className="flex-1 py-1.5 rounded bg-purple-500/10 text-purple-400 hover:bg-purple-500/20 text-[10px] font-bold transition-colors"
+            >
+              +50 XP/Coins
+            </button>
+            <button 
+              onClick={() => devUpdateProfile({ targetLevel: profile.level + 1 })}
+              className="flex-1 py-1.5 rounded bg-purple-500/10 text-purple-400 hover:bg-purple-500/20 text-[10px] font-bold transition-colors"
+            >
+              +1 Level
+            </button>
+          </div>
+          
+          {/* Pet Health */}
+          <div className="flex gap-2">
+            <button 
+              onClick={() => devUpdateProfile({ healthDelta: 20 })}
+              className="flex-1 flex items-center justify-center gap-1 py-1.5 rounded bg-emerald-500/10 text-emerald-400 hover:bg-emerald-500/20 text-[10px] font-bold transition-colors"
+            >
+              <Plus size={10} /> HP
+            </button>
+            <button 
+              onClick={() => devUpdateProfile({ healthDelta: -20 })}
+              className="flex-1 flex items-center justify-center gap-1 py-1.5 rounded bg-red-500/10 text-red-400 hover:bg-red-500/20 text-[10px] font-bold transition-colors"
+            >
+              <Minus size={10} /> HP
+            </button>
+          </div>
+        </div>
       </nav>
 
       {/* Pet Status Card — now merged into profile card above */}

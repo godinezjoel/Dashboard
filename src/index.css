@@ -6,43 +6,61 @@
 
 /* ── CSS Custom Properties (Theme System) ──────────────────────────────────── */
 :root {
-  /* Default black theme */
-  --bg-primary: #000000;
-  --bg-surface: #0a0a0a;
-  --bg-card: #121212;
-  --bg-elevated: #1a1a1a;
-  --border: #262626;
-  --text-primary: #ffffff;
+  /* Modern Dark Theme (Slate/Zinc instead of pure black) */
+  --bg-primary: #09090b;
+  --bg-surface: #18181b;
+  --bg-card: #18181b;
+  --bg-elevated: #27272a;
+  --border: #27272a;
+  --text-primary: #fafafa;
   --text-secondary: #a1a1aa;
   --text-muted: #71717a;
-  --accent: #ffffff;
-  --accent-glow: rgba(255, 255, 255, 0.1);
-  --accent-subtle: rgba(255, 255, 255, 0.05);
+  --accent: #6366f1;
+  /* Indigo 500 */
+  --accent-glow: rgba(99, 102, 241, 0.2);
+  --accent-subtle: rgba(99, 102, 241, 0.1);
   --sidebar-width: 240px;
+  --shadow-card: 0 4px 6px -1px rgba(0, 0, 0, 0.2), 0 2px 4px -2px rgba(0, 0, 0, 0.2);
+  --shadow-btn: 0 0 16px var(--accent-glow);
+  --shadow-btn-hover: 0 0 24px rgba(99, 102, 241, 0.4);
 }
 
 [data-theme="light"] {
+  /* Modern Light Theme (Stronger contrast, less blinding white) */
   --bg-primary: #f4f4f5;
   --bg-surface: #ffffff;
   --bg-card: #ffffff;
   --bg-elevated: #f4f4f5;
-  --border: #e4e4e7;
-  --text-primary: #18181b;
-  --text-secondary: #3f3f46;
-  --text-muted: #71717a;
-  --accent: #000000;
-  --accent-glow: rgba(0, 0, 0, 0.1);
-  --accent-subtle: rgba(0, 0, 0, 0.05);
+  /* slate-50 */
+  --border: #d4d4d8;
+  /* slate-300 - stronger borders */
+  --text-primary: #09090b;
+  --text-secondary: #52525b;
+  /* slate-700 - darker text */
+  --text-muted: #a1a1aa;
+  /* slate-500 */
+  --accent: #4f46e5;
+  /* Indigo 600 */
+  --accent-glow: rgba(79, 70, 229, 0.15);
+  --accent-subtle: rgba(79, 70, 229, 0.12);
+  --shadow-card: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -2px rgba(0, 0, 0, 0.06);
+  /* Stronger shadows */
+  --shadow-btn: 0 4px 10px var(--accent-glow);
+  --shadow-btn-hover: 0 6px 14px rgba(79, 70, 229, 0.25);
 }
 
 /* ── Base Reset ────────────────────────────────────────────────────────────── */
-*, *::before, *::after {
+*,
+*::before,
+*::after {
   box-sizing: border-box;
   margin: 0;
   padding: 0;
 }
 
-html, body, #root {
+html,
+body,
+#root {
   height: 100%;
   font-family: 'Inter', system-ui, sans-serif;
 }
@@ -60,9 +78,11 @@ body {
 ::-webkit-scrollbar {
   width: 4px;
 }
+
 ::-webkit-scrollbar-track {
   background: var(--bg-surface);
 }
+
 ::-webkit-scrollbar-thumb {
   background: var(--accent);
   border-radius: 2px;
@@ -71,29 +91,35 @@ body {
 
 /* ── Utility Classes ───────────────────────────────────────────────────────── */
 @layer components {
+
   /* Cards */
   .card {
     @apply rounded-2xl border transition-all duration-200;
     background: var(--bg-card);
     border-color: var(--border);
+    box-shadow: var(--shadow-card);
   }
 
   .card-elevated {
     background: var(--bg-elevated);
     border-color: var(--border);
     @apply rounded-2xl border;
+    box-shadow: var(--shadow-card);
   }
 
   /* Buttons */
   .btn-primary {
     @apply px-4 py-2 rounded-xl font-medium text-sm transition-all duration-200 active:scale-95;
     background: var(--accent);
-    color: var(--bg-primary);
-    box-shadow: 0 0 16px var(--accent-glow);
+    color: #ffffff;
+    /* Keep white text for strong contrast on the accent color */
+    box-shadow: var(--shadow-btn);
   }
+
   .btn-primary:hover {
-    filter: brightness(1.15);
-    box-shadow: 0 0 24px var(--accent-glow);
+    filter: brightness(1.1);
+    box-shadow: var(--shadow-btn-hover);
+    transform: translateY(-1px);
   }
 
   .btn-ghost {
@@ -101,14 +127,14 @@ body {
     color: var(--text-secondary);
     background: transparent;
   }
+
   .btn-ghost:hover {
     background: var(--accent-subtle);
     color: var(--text-primary);
   }
 
   .btn-danger {
-    @apply px-4 py-2 rounded-xl font-medium text-sm transition-all duration-200 active:scale-95
-           bg-red-500/10 text-red-400 hover:bg-red-500/20;
+    @apply px-4 py-2 rounded-xl font-medium text-sm transition-all duration-200 active:scale-95 bg-red-500/10 text-red-400 hover:bg-red-500/20;
   }
 
   /* Form inputs */
@@ -118,19 +144,32 @@ body {
     border: 1px solid var(--border);
     color: var(--text-primary);
   }
+
   .input:focus {
     border-color: var(--accent);
     box-shadow: 0 0 0 3px var(--accent-subtle);
   }
+
   .input::placeholder {
     color: var(--text-muted);
   }
 
   /* Text helpers */
-  .text-accent { color: var(--accent); }
-  .text-primary { color: var(--text-primary); }
-  .text-secondary { color: var(--text-secondary); }
-  .text-muted-custom { color: var(--text-muted); }
+  .text-accent {
+    color: var(--accent);
+  }
+
+  .text-primary {
+    color: var(--text-primary);
+  }
+
+  .text-secondary {
+    color: var(--text-secondary);
+  }
+
+  .text-muted-custom {
+    color: var(--text-muted);
+  }
 
   /* Divider */
   .divider {
@@ -158,50 +197,107 @@ body {
 
 /* ── Animations ────────────────────────────────────────────────────────────── */
 @keyframes slideInLeft {
-  from { opacity: 0; transform: translateX(-16px); }
-  to { opacity: 1; transform: translateX(0); }
+  from {
+    opacity: 0;
+    transform: translateX(-16px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
 }
 
 @keyframes slideInUp {
-  from { opacity: 0; transform: translateY(12px); }
-  to { opacity: 1; transform: translateY(0); }
+  from {
+    opacity: 0;
+    transform: translateY(12px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
 @keyframes shimmer {
-  0% { background-position: -200% center; }
-  100% { background-position: 200% center; }
+  0% {
+    background-position: -200% center;
+  }
+
+  100% {
+    background-position: 200% center;
+  }
 }
 
 @keyframes petFloat {
-  0%, 100% { transform: translateY(0px) rotate(0deg); }
-  33% { transform: translateY(-4px) rotate(-2deg); }
-  66% { transform: translateY(-2px) rotate(2deg); }
+
+  0%,
+  100% {
+    transform: translateY(0px) rotate(0deg);
+  }
+
+  33% {
+    transform: translateY(-4px) rotate(-2deg);
+  }
+
+  66% {
+    transform: translateY(-2px) rotate(2deg);
+  }
 }
 
 @keyframes criticalPulse {
-  0%, 100% { transform: scale(1); filter: drop-shadow(0 0 4px #ef4444); }
-  50% { transform: scale(1.05); filter: drop-shadow(0 0 12px #ef4444); }
+
+  0%,
+  100% {
+    transform: scale(1);
+    filter: drop-shadow(0 0 4px #ef4444);
+  }
+
+  50% {
+    transform: scale(1.05);
+    filter: drop-shadow(0 0 12px #ef4444);
+  }
 }
 
 @keyframes xpGain {
-  0% { opacity: 1; transform: translateY(0) scale(1); }
-  100% { opacity: 0; transform: translateY(-32px) scale(0.8); }
+  0% {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+
+  100% {
+    opacity: 0;
+    transform: translateY(-32px) scale(0.8);
+  }
 }
 
-.animate-slide-in-left { animation: slideInLeft 0.3s ease-out; }
-.animate-slide-in-up { animation: slideInUp 0.25s ease-out; }
-.animate-pet-float { animation: petFloat 3.5s ease-in-out infinite; }
-.animate-pet-critical { animation: criticalPulse 1s ease-in-out infinite; }
-.animate-xp-gain { animation: xpGain 1.2s ease-out forwards; }
+.animate-slide-in-left {
+  animation: slideInLeft 0.3s ease-out;
+}
+
+.animate-slide-in-up {
+  animation: slideInUp 0.25s ease-out;
+}
+
+.animate-pet-float {
+  animation: petFloat 3.5s ease-in-out infinite;
+}
+
+.animate-pet-critical {
+  animation: criticalPulse 1s ease-in-out infinite;
+}
+
+.animate-xp-gain {
+  animation: xpGain 1.2s ease-out forwards;
+}
 
 /* Shimmer skeleton loading */
 .skeleton {
-  background: linear-gradient(
-    90deg,
-    var(--bg-card) 25%,
-    var(--bg-elevated) 50%,
-    var(--bg-card) 75%
-  );
+  background: linear-gradient(90deg,
+      var(--bg-card) 25%,
+      var(--bg-elevated) 50%,
+      var(--bg-card) 75%);
   background-size: 200% 100%;
   animation: shimmer 1.5s infinite;
   border-radius: 8px;

@@ -189,10 +189,21 @@ export default function TaskItem({ task }) {
                 )}
                 
                 {hasSubtasks && (
-                  <span className="flex items-center gap-1 text-[10px]" style={{ color: 'var(--text-muted)' }}>
-                    <CheckSquare size={10} />
-                    {completedSubtasksCount}/{task.subtasks.length}
-                  </span>
+                  <div className="flex items-center gap-2">
+                    <span className="flex items-center gap-1 text-[10px]" style={{ color: 'var(--text-muted)' }}>
+                      <CheckSquare size={10} />
+                      {completedSubtasksCount}/{task.subtasks.length}
+                    </span>
+                    <div className="h-1.5 w-16 rounded-full overflow-hidden" style={{ background: 'var(--bg-elevated)' }}>
+                      <motion.div 
+                        initial={{ width: 0 }}
+                        animate={{ width: `${(completedSubtasksCount / task.subtasks.length) * 100}%` }}
+                        transition={{ duration: 0.5, ease: 'easeOut' }}
+                        className="h-full rounded-full"
+                        style={{ background: 'var(--accent)' }}
+                      />
+                    </div>
+                  </div>
                 )}
                 
                 {task.notes && (

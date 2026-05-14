@@ -382,7 +382,7 @@ export function GameProvider({ children }) {
     await supabase.auth.signOut();
   }, []);
 
-  const devUpdateProfile = useCallback(async ({ xpDelta = 0, coinsDelta = 0, targetLevel = null, customPetName = null, streakDelta = 0 }) => {
+  const devUpdateProfile = useCallback(async ({ xpDelta = 0, coinsDelta = 0, targetLevel = null, customPetName = null, streakDelta = 0, healthDelta = 0 }) => {
     if (!state.user || !state.profile) return;
     
     // Profile Updates
@@ -412,14 +412,18 @@ export function GameProvider({ children }) {
       .eq('id', state.user.id);
 
     // Pet Updates
-    if (customPetName !== null && state.activePet) {
+    if (state.activePet && (customPetName !== null || healthDelta !== 0)) {
+      const newHealth = Math.max(0, Math.min(100, state.activePet.health + healthDelta));
+      const newCustomName = customPetName !== null ? customPetName : state.activePet.custom_name;
+      const newLastFed = healthDelta !== 0 ? new Date().toISOString() : state.activePet.last_fed;
+
       dispatch({
         type: 'SET_PET',
-        payload: { ...state.activePet, custom_name: customPetName }
+        payload: { ...state.activePet, custom_name: newCustomName, health: newHealth, last_fed: newLastFed }
       });
       await supabase
         .from('user_pets')
-        .update({ custom_name: customPetName })
+        .update({ custom_name: newCustomName, health: newHealth, last_fed: newLastFed })
         .eq('id', state.activePet.id);
     }
   }, [state.user, state.profile, state.activePet]);

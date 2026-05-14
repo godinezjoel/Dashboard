@@ -35,12 +35,6 @@ const SORT_OPTIONS = [
 export default function TaskList({ selectedDate, onClearDate }) {
   const { tasks, addTask, loading } = useGame();
 
-  const [title, setTitle]       = useState('');
-  const [category, setCategory] = useState('general');
-  const [priority, setPriority] = useState('medium');
-  const [isAdding, setIsAdding] = useState(false);
-  const [addError, setAddError] = useState('');
-
   const [filterCat, setFilterCat] = useState(() => localStorage.getItem('lifeos_filterCat') || 'all');
   const [sortBy, setSortBy]       = useState(() => localStorage.getItem('lifeos_sortBy') || 'created');
   const [showDone, setShowDone]   = useState(false);
@@ -70,25 +64,6 @@ export default function TaskList({ selectedDate, onClearDate }) {
 
   const doneTasks = tasks.filter((t) => t.is_done);
 
-  async function handleAdd(e) {
-    e.preventDefault();
-    const t = title.trim();
-    if (!t) return;
-    setIsAdding(true);
-    setAddError('');
-    try {
-      await addTask(t, { category, priority, dueDate: selectedDate });
-      setTitle('');
-      setCategory('general');
-      setPriority('medium');
-    } catch (err) {
-      console.error('[TaskList] addTask error:', err);
-      setAddError('Could not save task. Check console.');
-    } finally {
-      setIsAdding(false);
-    }
-  }
-
   if (loading) {
     return (
       <div className="p-6 space-y-3">
@@ -99,96 +74,6 @@ export default function TaskList({ selectedDate, onClearDate }) {
 
   return (
     <div className="space-y-6">
-
-      {/* ══ ADD TASK CARD ═══════════════════════════════════════ */}
-      <div
-        className="rounded-2xl p-4"
-        style={{ background: 'var(--bg-card)', border: '1px solid var(--border)' }}
-      >
-        <p className="text-[10px] font-bold uppercase tracking-widest mb-3" style={{ color: 'var(--text-muted)' }}>
-          New Task
-        </p>
-
-        <form onSubmit={handleAdd} className="space-y-3">
-          {/* Title input */}
-          <div className="flex gap-2">
-            <input
-              type="text"
-              className="input flex-1"
-              placeholder={selectedDate ? `Add task for ${selectedDate.toLocaleDateString()}...` : "What needs to be done?"}
-              value={title}
-              onChange={(e) => setTitle(e.target.value)}
-              disabled={isAdding}
-              id="add-task-input"
-              autoComplete="off"
-            />
-            <button
-              type="submit"
-              className="btn-primary flex items-center gap-1.5 flex-shrink-0"
-              disabled={isAdding || !title.trim()}
-              id="add-task-btn"
-            >
-              <Plus size={14} />
-              {isAdding ? 'Adding…' : 'Add'}
-            </button>
-          </div>
-
-          {/* Category + Priority on same row */}
-          <div className="flex items-center gap-4">
-            {/* Category */}
-            <div className="flex items-center gap-1.5">
-              <span className="text-[10px] uppercase tracking-wider flex-shrink-0" style={{ color: 'var(--text-muted)' }}>Category</span>
-              <div className="flex gap-1">
-                {CATEGORIES.map((c) => (
-                  <button
-                    key={c.value}
-                    type="button"
-                    onClick={() => setCategory(c.value)}
-                    className="px-2.5 py-1 text-xs rounded-lg transition-all"
-                    style={
-                      category === c.value
-                        ? c.style
-                        : { background: 'transparent', color: 'var(--text-muted)', border: '1px solid var(--border)' }
-                    }
-                  >
-                    {c.label}
-                  </button>
-                ))}
-              </div>
-            </div>
-
-            <div className="w-px self-stretch" style={{ background: 'var(--border)' }} />
-
-            {/* Priority */}
-            <div className="flex items-center gap-1.5">
-              <span className="text-[10px] uppercase tracking-wider flex-shrink-0" style={{ color: 'var(--text-muted)' }}>Priority</span>
-              <div className="flex gap-1">
-                {PRIORITIES.map((p) =>                      <button
-                        key={p.value}
-                        type="button"
-                        onClick={() => setPriority(p.value)}
-                        className="px-2.5 py-1 text-xs rounded-lg transition-all flex items-center gap-1.5"
-                        style={
-                          priority === p.value
-                            ? { background: p.bg, color: 'var(--text-primary)', border: `1px solid ${p.color}` }
-                            : { background: 'transparent', color: 'var(--text-muted)', border: '1px solid var(--border)' }
-                        }
-                      >
-                        <div className="flex-shrink-0 flex items-center justify-center w-3 h-3">
-                          {p.icon}
-                        </div>
-                        {p.label}
-                      </button>
-                )}
-              </div>
-            </div>
-          </div>
-
-          {addError && (
-            <p className="text-xs text-red-400">{addError}</p>
-          )}
-        </form>
-      </div>
 
       {/* ══ FILTER + SORT BAR ══════════════════════════════════ */}
       <div className="pt-4 mt-6 border-t" style={{ borderColor: 'var(--border)' }}>
