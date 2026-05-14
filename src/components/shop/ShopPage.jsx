@@ -1,258 +1,153 @@
 import { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { ShoppingBag, Check, Lock, Palette } from 'lucide-react';
+import { ShoppingBag, Lock, Egg, Dog, Cat, Bird, Rabbit, Ghost, Coins, RefreshCw } from 'lucide-react';
 import { useGame } from '../../context/GameContext';
 import toast from 'react-hot-toast';
 
-const THEMES = [
-  {
-    id: 'default',
-    name: 'Void Dark',
-    description: 'Deep violet on dark slate. The default.',
-    emoji: '🌌',
-    price: 0,
-    preview: 'from-violet-900 to-slate-900',
-  },
-  {
-    id: 'cyberpunk',
-    name: 'Cyberpunk',
-    description: 'Neon cyan & magenta on pure black.',
-    emoji: '⚡',
-    price: 200,
-    preview: 'from-cyan-900 to-purple-900',
-  },
-  {
-    id: 'forest',
-    name: 'Forest',
-    description: 'Bioluminescent green on deep forest night.',
-    emoji: '🌿',
-    price: 200,
-    preview: 'from-emerald-900 to-green-950',
-  },
-];
+const PET_ICONS = {
+  'Eggling': Egg,
+  'Pup':     Dog,
+  'Fox':     Cat,
+  'Dragon':  Bird,
+  'Bunny':   Rabbit,
+  'Ghost':   Ghost,
+};
 
 export default function ShopPage() {
-  const { profile, allPets, ownedPets, buyPet, activatePet, setTheme } = useGame();
-  const [activeTab, setActiveTab] = useState('pets');
+  const { profile, allPets, ownedPets, activePet, buyPet, activatePet } = useGame();
   const [loadingId, setLoadingId] = useState(null);
 
-  const ownedPetIds = new Set(ownedPets.map((p) => p.pet_id));
-  const activePetId = ownedPets.find((p) => p.is_active)?.pet_id;
-  const activeUserPetId = ownedPets.find((p) => p.is_active)?.id;
+  const activePetId = activePet?.pet?.id ?? null;
 
-  async function handleBuyPet(pet) {
-    if (!profile || profile.coins < pet.price_coins) {
-      toast.error('Not enough coins! 🪙');
-      return;
-    }
-    setLoadingId(pet.id);
-    try {
-      await buyPet(pet);
-      toast.success(`${pet.sprite_emoji} ${pet.name} added to your collection!`);
-    } catch (err) {
-      toast.error(err.message ?? 'Purchase failed');
-    } finally {
-      setLoadingId(null);
-    }
-  }
+  async function handleSelectPet(pet) {
+    const userPet = ownedPets.find((p) => p.pet_id === pet.id);
 
-  async function handleActivatePet(userPet) {
-    setLoadingId(userPet.id);
-    try {
-      await activatePet(userPet.id);
-      toast.success(`${userPet.pet?.sprite_emoji} ${userPet.pet?.name} is now active!`);
-    } catch (err) {
-      toast.error('Failed to activate pet');
-    } finally {
-      setLoadingId(null);
+    if (userPet) {
+      // Already owned — just switch to it
+      if (userPet.pet_id === activePetId) return; // already active, do nothing
+      setLoadingId(pet.id);
+      try {
+        await activatePet(userPet.id);
+        toast.success(`Switched to ${pet.name}.`);
+      } catch (err) {
+        toast.error('Failed to switch pet');
+      } finally {
+        setLoadingId(null);
+      }
+    } else {
+      // Not owned — buy it (and it auto-activates)
+      if (!profile || profile.coins < pet.price_coins) {
+        toast.error('Not enough coins.');
+        return;
+      }
+      setLoadingId(pet.id);
+      try {
+        const newUserPet = await buyPet(pet);
+        // Activate the newly bought pet immediately
+        await activatePet(newUserPet.id);
+        toast.success(`${pet.name} is now your active pet.`);
+      } catch (err) {
+        toast.error(err.message ?? 'Purchase failed');
+      } finally {
+        setLoadingId(null);
+      }
     }
-  }
-
-  async function handleSetTheme(themeId) {
-    await setTheme(themeId);
-    toast.success(`Theme changed!`);
   }
 
   return (
-    <div className="p-6 max-w-3xl">
+    <div className="p-6">
       {/* Header */}
       <div className="mb-6">
         <h2 className="text-xl font-bold mb-1 flex items-center gap-2" style={{ color: 'var(--text-primary)' }}>
-          <ShoppingBag size={20} style={{ color: 'var(--accent)' }} />
-          Shop
+          <ShoppingBag size={20} />
+          Pet Shop
         </h2>
-        <p className="text-sm" style={{ color: 'var(--text-muted)' }}>
-          Spend your hard-earned coins
+        <p className="text-sm flex items-center gap-2" style={{ color: 'var(--text-muted)' }}>
+          Choose your companion
           {profile && (
-            <span className="ml-2 text-amber-400 font-semibold">🪙 {profile.coins} available</span>
+            <span className="flex items-center gap-1 font-semibold" style={{ color: 'var(--text-secondary)' }}>
+              <Coins size={13} /> {profile.coins}
+            </span>
           )}
         </p>
       </div>
 
-      {/* Tabs */}
-      <div className="flex gap-1 mb-6 p-1 rounded-xl w-fit" style={{ background: 'var(--bg-surface)' }}>
-        {[
-          { id: 'pets', label: 'Pets', icon: '🐾' },
-          { id: 'themes', label: 'Themes', icon: '🎨' },
-        ].map((tab) => (
-          <button
-            key={tab.id}
-            onClick={() => setActiveTab(tab.id)}
-            className={`px-4 py-2 rounded-lg text-sm font-medium transition-all duration-150 flex items-center gap-1.5`}
-            id={`shop-tab-${tab.id}`}
-            style={
-              activeTab === tab.id
-                ? { background: 'var(--bg-card)', color: 'var(--accent)', boxShadow: '0 2px 8px rgba(0,0,0,0.2)' }
-                : { color: 'var(--text-muted)' }
-            }
-          >
-            <span>{tab.icon}</span>
-            {tab.label}
-          </button>
-        ))}
-      </div>
-
-      {/* Pets Tab */}
       <AnimatePresence mode="wait">
-        {activeTab === 'pets' && (
-          <motion.div
-            key="pets"
-            initial={{ opacity: 0, y: 8 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: -8 }}
-            className="grid grid-cols-2 gap-3 sm:grid-cols-3"
-          >
-            {allPets.map((pet) => {
-              const owned = ownedPetIds.has(pet.id);
-              const isActive = activePetId === pet.id;
-              const userPet = ownedPets.find((p) => p.pet_id === pet.id);
-              const canAfford = (profile?.coins ?? 0) >= pet.price_coins;
-              const isLoading = loadingId === pet.id || loadingId === userPet?.id;
+        <motion.div
+          key="pets"
+          initial={{ opacity: 0, y: 8 }}
+          animate={{ opacity: 1, y: 0 }}
+          exit={{ opacity: 0, y: -8 }}
+          className="grid grid-cols-2 gap-3 sm:grid-cols-3"
+        >
+          {allPets.map((pet) => {
+            const PetIcon = PET_ICONS[pet.name] || Ghost;
+            const isActive = activePetId === pet.id;
+            const owned = ownedPets.some((p) => p.pet_id === pet.id);
+            const canAfford = (profile?.coins ?? 0) >= pet.price_coins;
+            const isLoading = loadingId === pet.id;
 
-              return (
-                <motion.div
-                  key={pet.id}
-                  whileHover={{ y: -2 }}
-                  className="card p-4 flex flex-col items-center text-center gap-2 relative overflow-hidden"
-                  style={{
-                    border: isActive ? '1px solid var(--accent)' : undefined,
-                    boxShadow: isActive ? '0 0 16px var(--accent-glow)' : undefined,
-                  }}
-                >
-                  {isActive && (
-                    <span className="absolute top-2 right-2 badge text-[10px]">Active</span>
-                  )}
+            // Skip the currently active pet — it lives on "My Pet" page
+            if (isActive) return null;
 
-                  <span className="text-4xl block mt-1">{pet.sprite_emoji}</span>
-                  <div>
-                    <p className="text-sm font-semibold" style={{ color: 'var(--text-primary)' }}>
-                      {pet.name}
-                    </p>
-                    <p className="text-[10px] mt-0.5 leading-relaxed" style={{ color: 'var(--text-muted)' }}>
-                      {pet.description}
-                    </p>
-                  </div>
+            return (
+              <motion.div
+                key={pet.id}
+                whileHover={{ y: -2 }}
+                className="card p-4 flex flex-col items-center text-center gap-3 relative overflow-hidden"
+              >
+                {/* Pet icon */}
+                <div className="mt-2 text-neutral-400">
+                  <PetIcon size={40} strokeWidth={1} />
+                </div>
 
-                  {/* Price / Owned tag */}
-                  {pet.price_coins > 0 && !owned && (
-                    <p className={`text-xs font-semibold ${canAfford ? 'text-amber-400' : 'text-red-400'}`}>
-                      🪙 {pet.price_coins}
-                    </p>
-                  )}
+                <div>
+                  <p className="text-sm font-semibold" style={{ color: 'var(--text-primary)' }}>
+                    {pet.name}
+                  </p>
+                  <p className="text-[10px] mt-0.5 leading-relaxed" style={{ color: 'var(--text-muted)' }}>
+                    {pet.description}
+                  </p>
+                </div>
 
-                  {/* Action button */}
-                  <div className="w-full mt-auto">
-                    {owned && !isActive ? (
-                      <button
-                        className="w-full btn-ghost text-xs py-1.5"
-                        onClick={() => handleActivatePet(userPet)}
-                        disabled={isLoading}
-                        id={`activate-pet-${pet.id}`}
-                      >
-                        {isLoading ? '...' : 'Activate'}
-                      </button>
-                    ) : owned && isActive ? (
-                      <div className="flex items-center justify-center gap-1 text-xs" style={{ color: 'var(--accent)' }}>
-                        <Check size={12} />
-                        Active
-                      </div>
-                    ) : (
-                      <button
-                        className={`w-full text-xs py-1.5 rounded-lg font-medium transition-all ${
-                          canAfford ? 'btn-primary' : 'btn-danger cursor-not-allowed'
-                        }`}
-                        onClick={() => canAfford && handleBuyPet(pet)}
-                        disabled={!canAfford || isLoading}
-                        id={`buy-pet-${pet.id}`}
-                      >
-                        {isLoading ? '...' : canAfford ? 'Buy' : <><Lock size={10} className="inline mr-1" />Need {pet.price_coins}</>}
-                      </button>
-                    )}
-                  </div>
-                </motion.div>
-              );
-            })}
-          </motion.div>
-        )}
+                {/* Price tag for unowned pets */}
+                {!owned && pet.price_coins > 0 && (
+                  <p className={`text-xs font-semibold flex items-center gap-1 ${canAfford ? '' : 'text-red-400'}`} style={canAfford ? { color: 'var(--text-secondary)' } : {}}>
+                    <Coins size={11} /> {pet.price_coins}
+                  </p>
+                )}
 
-        {/* Themes Tab */}
-        {activeTab === 'themes' && (
-          <motion.div
-            key="themes"
-            initial={{ opacity: 0, y: 8 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: -8 }}
-            className="space-y-3"
-          >
-            {THEMES.map((theme) => {
-              const isActive = (profile?.active_theme ?? 'default') === theme.id;
-              const canAfford = theme.price === 0 || (profile?.coins ?? 0) >= theme.price;
-
-              return (
-                <motion.div
-                  key={theme.id}
-                  whileHover={{ x: 2 }}
-                  className="card p-4 flex items-center gap-4 cursor-pointer"
-                  style={{
-                    border: isActive ? '1px solid var(--accent)' : undefined,
-                    boxShadow: isActive ? '0 0 16px var(--accent-glow)' : undefined,
-                  }}
-                  onClick={() => isActive || handleSetTheme(theme.id)}
-                >
-                  {/* Preview gradient */}
-                  <div className={`w-12 h-12 rounded-xl bg-gradient-to-br ${theme.preview} flex-shrink-0 flex items-center justify-center text-xl`}>
-                    {theme.emoji}
-                  </div>
-
-                  <div className="flex-1">
-                    <p className="text-sm font-semibold" style={{ color: 'var(--text-primary)' }}>
-                      {theme.name}
-                    </p>
-                    <p className="text-xs" style={{ color: 'var(--text-muted)' }}>
-                      {theme.description}
-                    </p>
-                  </div>
-
-                  {isActive ? (
-                    <span className="badge text-[10px]">Active</span>
-                  ) : theme.price > 0 ? (
-                    <span className={`text-xs font-semibold ${canAfford ? 'text-amber-400' : 'text-red-400'}`}>
-                      🪙 {theme.price}
-                    </span>
-                  ) : (
+                {/* Action */}
+                <div className="w-full mt-auto">
+                  {owned ? (
                     <button
-                      className="btn-ghost text-xs py-1"
-                      onClick={() => handleSetTheme(theme.id)}
-                      id={`set-theme-${theme.id}`}
+                      className="w-full btn-ghost text-xs py-1.5 flex items-center justify-center gap-1"
+                      onClick={() => handleSelectPet(pet)}
+                      disabled={isLoading}
+                      id={`switch-pet-${pet.id}`}
                     >
-                      Apply
+                      <RefreshCw size={11} />
+                      {isLoading ? '...' : 'Switch to'}
                     </button>
+                  ) : canAfford ? (
+                    <button
+                      className="w-full btn-primary text-xs py-1.5"
+                      onClick={() => handleSelectPet(pet)}
+                      disabled={isLoading}
+                      id={`buy-pet-${pet.id}`}
+                    >
+                      {isLoading ? '...' : 'Buy & Activate'}
+                    </button>
+                  ) : (
+                    <div className="flex items-center justify-center gap-1 text-xs" style={{ color: 'var(--text-muted)' }}>
+                      <Lock size={11} /> Need {pet.price_coins}
+                    </div>
                   )}
-                </motion.div>
-              );
-            })}
-          </motion.div>
-        )}
+                </div>
+              </motion.div>
+            );
+          })}
+        </motion.div>
       </AnimatePresence>
     </div>
   );

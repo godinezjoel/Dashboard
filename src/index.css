@@ -6,47 +6,33 @@
 
 /* ── CSS Custom Properties (Theme System) ──────────────────────────────────── */
 :root {
-  /* Default dark theme */
-  --bg-primary: #09090f;
-  --bg-surface: #12131f;
-  --bg-card: #1a1b2e;
-  --bg-elevated: #212235;
-  --border: rgba(139, 92, 246, 0.15);
-  --text-primary: #f1f0ff;
-  --text-secondary: #8b8aad;
-  --text-muted: #4a4968;
-  --accent: #8b5cf6;
-  --accent-glow: rgba(139, 92, 246, 0.3);
-  --accent-subtle: rgba(139, 92, 246, 0.08);
+  /* Default black theme */
+  --bg-primary: #000000;
+  --bg-surface: #0a0a0a;
+  --bg-card: #121212;
+  --bg-elevated: #1a1a1a;
+  --border: #262626;
+  --text-primary: #ffffff;
+  --text-secondary: #a1a1aa;
+  --text-muted: #71717a;
+  --accent: #ffffff;
+  --accent-glow: rgba(255, 255, 255, 0.1);
+  --accent-subtle: rgba(255, 255, 255, 0.05);
   --sidebar-width: 240px;
 }
 
-[data-theme="cyberpunk"] {
-  --bg-primary: #05010d;
-  --bg-surface: #0f0a1e;
-  --bg-card: #170f2a;
-  --bg-elevated: #1e1338;
-  --border: rgba(0, 255, 245, 0.15);
-  --text-primary: #e0e0ff;
-  --text-secondary: #9090c0;
-  --text-muted: #404060;
-  --accent: #00fff5;
-  --accent-glow: rgba(0, 255, 245, 0.3);
-  --accent-subtle: rgba(0, 255, 245, 0.08);
-}
-
-[data-theme="forest"] {
-  --bg-primary: #030d06;
-  --bg-surface: #061410;
-  --bg-card: #0a1e14;
-  --bg-elevated: #0f2a1c;
-  --border: rgba(0, 230, 118, 0.15);
-  --text-primary: #c8ffd4;
-  --text-secondary: #7ab888;
-  --text-muted: #2a4030;
-  --accent: #00e676;
-  --accent-glow: rgba(0, 230, 118, 0.3);
-  --accent-subtle: rgba(0, 230, 118, 0.08);
+[data-theme="light"] {
+  --bg-primary: #f4f4f5;
+  --bg-surface: #ffffff;
+  --bg-card: #ffffff;
+  --bg-elevated: #f4f4f5;
+  --border: #e4e4e7;
+  --text-primary: #18181b;
+  --text-secondary: #3f3f46;
+  --text-muted: #71717a;
+  --accent: #000000;
+  --accent-glow: rgba(0, 0, 0, 0.1);
+  --accent-subtle: rgba(0, 0, 0, 0.05);
 }
 
 /* ── Base Reset ────────────────────────────────────────────────────────────── */

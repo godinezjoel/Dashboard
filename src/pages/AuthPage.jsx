@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { motion } from 'framer-motion';
 import { supabase } from '../supabase/client';
 import toast from 'react-hot-toast';
+import { Hexagon, Rocket, LogIn, Egg } from 'lucide-react';
 
 export default function AuthPage() {
   const [mode, setMode] = useState('login'); // 'login' | 'signup'
@@ -64,13 +65,9 @@ export default function AuthPage() {
           {/* Logo */}
           <div className="text-center mb-8">
             <div
-              className="w-16 h-16 rounded-2xl flex items-center justify-center text-3xl mx-auto mb-4"
-              style={{
-                background: 'var(--accent)',
-                boxShadow: '0 0 32px var(--accent-glow)',
-              }}
+              className="w-16 h-16 rounded-2xl flex items-center justify-center text-3xl mx-auto mb-4 text-white bg-black border border-neutral-800"
             >
-              ⚡
+              <Hexagon size={32} strokeWidth={1.5} />
             </div>
             <h1 className="text-2xl font-bold" style={{ color: 'var(--text-primary)' }}>
               Life-OS
@@ -160,22 +157,22 @@ export default function AuthPage() {
 
             <button
               type="submit"
-              className="btn-primary w-full mt-2 py-3 text-sm font-semibold"
+              className="btn-primary w-full mt-2 py-3 text-sm font-semibold flex items-center justify-center gap-2"
               disabled={loading}
               id="auth-submit"
             >
               {loading
                 ? 'Loading…'
                 : mode === 'signup'
-                ? '🚀 Start your Journey'
-                : '⚡ Sign In'}
+                ? <><Rocket size={16} /> Start your Journey</>
+                : <><LogIn size={16} /> Sign In</>}
             </button>
           </form>
 
           {/* Footer note */}
-          <p className="text-center text-xs mt-5" style={{ color: 'var(--text-muted)' }}>
+          <p className="text-center text-xs mt-5 flex items-center justify-center gap-1" style={{ color: 'var(--text-muted)' }}>
             {mode === 'signup'
-              ? 'A pet will be waiting for you 🥚'
+              ? <>A pet will be waiting for you <Egg size={12} className="inline" /></>
               : "Don't have an account? "}
             {mode === 'login' && (
               <button

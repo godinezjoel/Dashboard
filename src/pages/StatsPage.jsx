@@ -1,7 +1,7 @@
 import { motion } from 'framer-motion';
 import { useGame } from '../context/GameContext';
 import { calculateLevelPercent, xpToNextLevel, calculateCurrentHealth } from '../lib/gameLogic';
-import { BarChart2, Zap, CheckSquare, Heart, Trophy } from 'lucide-react';
+import { BarChart2, Zap, CheckSquare, Heart, Trophy, Star, Coins } from 'lucide-react';
 
 export default function StatsPage() {
   const { profile, tasks, activePet } = useGame();
@@ -14,16 +14,16 @@ export default function StatsPage() {
   const health = activePet ? calculateCurrentHealth(activePet.last_fed, activePet.health) : 0;
 
   const milestones = [
-    { label: 'First Task', reached: totalDone >= 1, icon: '🎯' },
-    { label: 'Level 5', reached: profile.level >= 5, icon: '⭐' },
-    { label: 'Level 10', reached: profile.level >= 10, icon: '🌟' },
-    { label: '10 Tasks', reached: totalDone >= 10, icon: '✅' },
-    { label: '500 XP', reached: profile.xp >= 500, icon: '⚡' },
-    { label: 'Rich (1000 coins)', reached: profile.coins >= 1000, icon: '💰' },
+    { label: 'First Task', reached: totalDone >= 1, icon: <CheckSquare size={24} strokeWidth={1} /> },
+    { label: 'Level 5', reached: profile.level >= 5, icon: <Star size={24} strokeWidth={1} /> },
+    { label: 'Level 10', reached: profile.level >= 10, icon: <Trophy size={24} strokeWidth={1} /> },
+    { label: '10 Tasks', reached: totalDone >= 10, icon: <CheckSquare size={24} strokeWidth={1} /> },
+    { label: '500 XP', reached: profile.xp >= 500, icon: <Zap size={24} strokeWidth={1} /> },
+    { label: 'Rich (1000 coins)', reached: profile.coins >= 1000, icon: <Coins size={24} strokeWidth={1} /> },
   ];
 
   return (
-    <div className="p-6 max-w-2xl">
+    <div className="p-6">
       <div className="mb-6">
         <h2 className="text-xl font-bold flex items-center gap-2" style={{ color: 'var(--text-primary)' }}>
           <BarChart2 size={20} style={{ color: 'var(--accent)' }} />
@@ -75,10 +75,10 @@ export default function StatsPage() {
       {/* Stats grid */}
       <div className="grid grid-cols-2 gap-3 mb-4">
         {[
-          { label: 'Total XP', value: profile.xp, icon: '⚡', color: 'text-violet-400' },
-          { label: 'Coins', value: profile.coins, icon: '🪙', color: 'text-amber-400' },
-          { label: 'Tasks Done', value: totalDone, icon: '✅', color: 'text-emerald-400' },
-          { label: 'Pet Health', value: `${Math.round(health)}%`, icon: '❤️', color: health < 30 ? 'text-red-400' : 'text-emerald-400' },
+          { label: 'Total XP', value: profile.xp, icon: <Zap size={24} strokeWidth={1.5} />, color: 'text-neutral-300' },
+          { label: 'Coins', value: profile.coins, icon: <Coins size={24} strokeWidth={1.5} />, color: 'text-neutral-300' },
+          { label: 'Tasks Done', value: totalDone, icon: <CheckSquare size={24} strokeWidth={1.5} />, color: 'text-neutral-300' },
+          { label: 'Pet Health', value: `${Math.round(health)}%`, icon: <Heart size={24} strokeWidth={1.5} />, color: health < 30 ? 'text-red-400' : 'text-neutral-300' },
         ].map((s, i) => (
           <motion.div
             key={s.label}

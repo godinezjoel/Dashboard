@@ -7,20 +7,22 @@ import Dashboard from './pages/Dashboard';
 import ShopPage from './components/shop/ShopPage';
 import StatsPage from './pages/StatsPage';
 import AuthPage from './pages/AuthPage';
+import PetPage from './pages/PetPage';
 
 // ── Auth Guard ─────────────────────────────────────────────────────────────────
 function ProtectedRoutes() {
-  const { user, loading } = useGame();
+  const { user, loading, initialized } = useGame();
 
-  if (loading) {
+  // Show spinner only during the very first cold boot
+  if (!initialized) {
     return (
       <div
         className="min-h-screen flex items-center justify-center"
         style={{ background: 'var(--bg-primary)' }}
       >
         <div className="text-center">
-          <div className="text-4xl mb-4 animate-bounce">⚡</div>
-          <p className="text-sm" style={{ color: 'var(--text-muted)' }}>Loading Life-OS…</p>
+          <div className="w-6 h-6 border-2 border-white/20 border-t-white rounded-full animate-spin mx-auto mb-3" />
+          <p className="text-xs" style={{ color: 'var(--text-muted)' }}>Loading…</p>
         </div>
       </div>
     );
@@ -34,6 +36,7 @@ function ProtectedRoutes() {
         <Route index element={<Dashboard />} />
         <Route path="shop" element={<ShopPage />} />
         <Route path="stats" element={<StatsPage />} />
+        <Route path="pet" element={<PetPage />} />
       </Route>
     </Routes>
   );
@@ -68,8 +71,8 @@ export default function App() {
 
 // Redirect already logged-in users away from /auth
 function AuthRedirect() {
-  const { user, loading } = useGame();
-  if (loading) return null;
+  const { user, initialized } = useGame();
+  if (!initialized) return null;
   if (user) return <Navigate to="/" replace />;
   return <AuthPage />;
 }

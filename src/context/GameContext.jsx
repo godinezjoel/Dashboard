@@ -6,12 +6,14 @@ import { calculateLevel, calculateCurrentHealth } from '../lib/gameLogic';
 const initialState = {
   user: null,
   profile: null,
-  activePet: null,      // { ...user_pets row, pet: { ...pets row } }
+  activePet: null,
   tasks: [],
   ownedPets: [],
   allPets: [],
-  loading: true,
+  loading: true,      // true only until the FIRST auth check completes
+  initialized: false, // flips to true once; never goes back to false
   error: null,
+  theme: localStorage.getItem('lifeos_theme') || 'dark',
 };
 
 // ── Reducer ────────────────────────────────────────────────────────────────────
@@ -37,8 +39,9 @@ function reducer(state, action) {
 
     case 'TASK_COMPLETED': {
       const { taskId, xp, coins, healthBoost } = action.payload;
+      const now = new Date().toISOString();
       const updatedTasks = state.tasks.map((t) =>
-        t.id === taskId ? { ...t, is_done: true } : t
+        t.id === taskId ? { ...t, is_done: true, completed_at: now } : t
       );
       const newXP = (state.profile?.xp ?? 0) + xp;
       const newCoins = (state.profile?.coins ?? 0) + coins;
@@ -61,8 +64,14 @@ function reducer(state, action) {
     case 'TASK_ADDED':
       return { ...state, tasks: [action.payload, ...state.tasks] };
 
+    case 'TASK_UPDATED':
+      return { ...state, tasks: state.tasks.map(t => t.id === action.payload.id ? action.payload : t) };
+
     case 'TASK_DELETED':
       return { ...state, tasks: state.tasks.filter((t) => t.id !== action.payload) };
+
+    case 'TASKS_CLEARED':
+      return { ...state, tasks: state.tasks.filter((t) => !t.is_done) };
 
     case 'PET_PURCHASED': {
       return {
@@ -89,7 +98,7 @@ function reducer(state, action) {
     case 'SET_THEME':
       return {
         ...state,
-        profile: state.profile ? { ...state.profile, active_theme: action.payload } : state.profile,
+        theme: action.payload,
       };
 
     case 'UPDATE_PET_HEALTH':
@@ -102,6 +111,9 @@ function reducer(state, action) {
 
     case 'SET_LOADING':
       return { ...state, loading: action.payload };
+
+    case 'SET_INITIALIZED':
+      return { ...state, initialized: true, loading: false };
 
     case 'SET_ERROR':
       return { ...state, error: action.payload };
@@ -127,15 +139,18 @@ export function GameProvider({ children }) {
       dispatch({ type: 'SET_USER', payload: session?.user ?? null });
 
       if (session?.user) {
-        await loadUserData(session.user.id);
+        await loadUserData(session.user.id, true);
       } else {
-        dispatch({ type: 'SET_LOADING', payload: false });
+        dispatch({ type: 'SET_INITIALIZED' });
       }
 
       const { data } = supabase.auth.onAuthStateChange(async (event, sess) => {
+        // INITIAL_SESSION fires right after bootstrap — skip it to avoid double load
+        if (event === 'INITIAL_SESSION') return;
         dispatch({ type: 'SET_USER', payload: sess?.user ?? null });
         if (sess?.user) {
-          await loadUserData(sess.user.id);
+          // Silent background refresh — don't show spinner
+          await loadUserData(sess.user.id, false);
         } else {
           dispatch({ type: 'SET_LOADING', payload: false });
         }
@@ -161,8 +176,8 @@ export function GameProvider({ children }) {
   }, [state.activePet]);
 
   // ── Data Loaders ───────────────────────────────────────────────────────────
-  async function loadUserData(userId) {
-    dispatch({ type: 'SET_LOADING', payload: true });
+  async function loadUserData(userId, showSpinner = false) {
+    if (showSpinner) dispatch({ type: 'SET_LOADING', payload: true });
     try {
       const [profileRes, tasksRes, userPetsRes, allPetsRes] = await Promise.all([
         supabase.from('profiles').select('*').eq('id', userId).single(),
@@ -198,7 +213,7 @@ export function GameProvider({ children }) {
       console.error('[GameContext] loadUserData error:', err);
       dispatch({ type: 'SET_ERROR', payload: err.message });
     } finally {
-      dispatch({ type: 'SET_LOADING', payload: false });
+      dispatch({ type: 'SET_INITIALIZED' });
     }
   }
 
@@ -228,27 +243,90 @@ export function GameProvider({ children }) {
       console.error('[GameContext] completeTask RPC error:', error);
       // Rollback on error – reload fresh data
       await loadUserData(state.user.id);
+      return;
+    }
+
+    // Handle Recurring Task
+    if (task.recurrence && task.recurrence !== 'none') {
+      const nextDueDate = new Date(task.due_date || new Date());
+      if (task.recurrence === 'daily') nextDueDate.setDate(nextDueDate.getDate() + 1);
+      if (task.recurrence === 'weekly') nextDueDate.setDate(nextDueDate.getDate() + 7);
+      if (task.recurrence === 'monthly') nextDueDate.setMonth(nextDueDate.getMonth() + 1);
+      
+      const { data: newTask } = await supabase.from('tasks').insert({
+        user_id: state.user.id,
+        title: task.title,
+        category: task.category,
+        priority: task.priority,
+        xp_reward: task.xp_reward,
+        coin_reward: task.coin_reward,
+        due_date: nextDueDate.toISOString(),
+        recurrence: task.recurrence,
+        notes: task.notes,
+        subtasks: Array.isArray(task.subtasks) ? task.subtasks.map(s => ({ ...s, is_done: false })) : []
+      }).select().single();
+      
+      if (newTask) {
+        dispatch({ type: 'TASK_ADDED', payload: newTask });
+      }
     }
   }, [state.user, state.profile, state.activePet]);
 
-  const addTask = useCallback(async (title, xpReward = 20, coinReward = 5) => {
+  const addTask = useCallback(async (title, { category = 'general', priority = 'medium', xpReward = 20, coinReward = 5, dueDate = null } = {}) => {
     if (!state.user) return;
     const newTask = {
       user_id: state.user.id,
       title: title.trim(),
       xp_reward: xpReward,
       coin_reward: coinReward,
+      category,
+      priority,
+      due_date: dueDate ? new Date(dueDate).toISOString() : null,
     };
-    const { data, error } = await supabase.from('tasks').insert(newTask).select().single();
-    if (error) throw error;
-    dispatch({ type: 'TASK_ADDED', payload: data });
-    return data;
+    
+    let result = await supabase.from('tasks').insert(newTask).select().single();
+    
+    // Fallback if category/priority columns don't exist yet in the database
+    if (result.error && result.error.message.includes('column "category" of relation "tasks" does not exist')) {
+      console.warn('[GameContext] Missing category/priority columns. Falling back to old schema.');
+      const fallbackTask = {
+        user_id: state.user.id,
+        title: title.trim(),
+        xp_reward: xpReward,
+        coin_reward: coinReward,
+      };
+      result = await supabase.from('tasks').insert(fallbackTask).select().single();
+    }
+    
+    if (result.error) throw result.error;
+    dispatch({ type: 'TASK_ADDED', payload: result.data });
+    return result.data;
   }, [state.user]);
 
   const deleteTask = useCallback(async (taskId) => {
     if (!state.user) return;
     dispatch({ type: 'TASK_DELETED', payload: taskId });
     await supabase.from('tasks').delete().eq('id', taskId).eq('user_id', state.user.id);
+  }, [state.user]);
+
+  const updateTask = useCallback(async (taskId, updates) => {
+    if (!state.user) return;
+    const { data, error } = await supabase
+      .from('tasks')
+      .update(updates)
+      .eq('id', taskId)
+      .eq('user_id', state.user.id)
+      .select()
+      .single();
+    if (error) throw error;
+    dispatch({ type: 'TASK_UPDATED', payload: data });
+    return data;
+  }, [state.user]);
+
+  const clearCompletedTasks = useCallback(async () => {
+    if (!state.user) return;
+    dispatch({ type: 'TASKS_CLEARED' });
+    await supabase.from('tasks').delete().eq('user_id', state.user.id).eq('is_done', true);
   }, [state.user]);
 
   const buyPet = useCallback(async (pet) => {
@@ -296,24 +374,68 @@ export function GameProvider({ children }) {
   }, [state.user]);
 
   const setTheme = useCallback(async (theme) => {
-    if (!state.user) return;
+    localStorage.setItem('lifeos_theme', theme);
     dispatch({ type: 'SET_THEME', payload: theme });
-    await supabase.from('profiles').update({ active_theme: theme }).eq('id', state.user.id);
-  }, [state.user]);
+  }, []);
 
   const signOut = useCallback(async () => {
     await supabase.auth.signOut();
   }, []);
 
+  const devUpdateProfile = useCallback(async ({ xpDelta = 0, coinsDelta = 0, targetLevel = null, customPetName = null, streakDelta = 0 }) => {
+    if (!state.user || !state.profile) return;
+    
+    // Profile Updates
+    let newXP = state.profile.xp + xpDelta;
+    let newCoins = state.profile.coins + coinsDelta;
+    let newStreak = (state.profile.streak || 0) + streakDelta;
+    
+    newXP = Math.max(0, newXP);
+    newCoins = Math.max(0, newCoins);
+    newStreak = Math.max(0, newStreak);
+
+    if (targetLevel !== null) {
+      const clampedLevel = Math.max(1, targetLevel);
+      newXP = (clampedLevel - 1) * 100;
+    }
+
+    const newLevel = Math.floor(newXP / 100) + 1;
+
+    dispatch({ 
+      type: 'SET_PROFILE', 
+      payload: { ...state.profile, xp: newXP, coins: newCoins, level: newLevel, streak: newStreak } 
+    });
+
+    await supabase
+      .from('profiles')
+      .update({ xp: newXP, coins: newCoins, level: newLevel, streak: newStreak })
+      .eq('id', state.user.id);
+
+    // Pet Updates
+    if (customPetName !== null && state.activePet) {
+      dispatch({
+        type: 'SET_PET',
+        payload: { ...state.activePet, custom_name: customPetName }
+      });
+      await supabase
+        .from('user_pets')
+        .update({ custom_name: customPetName })
+        .eq('id', state.activePet.id);
+    }
+  }, [state.user, state.profile, state.activePet]);
+
   const value = {
     ...state,
     completeTask,
     addTask,
+    updateTask,
     deleteTask,
+    clearCompletedTasks,
     buyPet,
     activatePet,
     setTheme,
     signOut,
+    devUpdateProfile,
   };
 
   return <GameContext.Provider value={value}>{children}</GameContext.Provider>;

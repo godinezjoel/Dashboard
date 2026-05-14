@@ -42,6 +42,13 @@ CREATE TABLE IF NOT EXISTS public.tasks (
   is_done       BOOLEAN     NOT NULL DEFAULT FALSE,
   xp_reward     INTEGER     NOT NULL DEFAULT 20 CHECK (xp_reward >= 0),
   coin_reward   INTEGER     NOT NULL DEFAULT 5  CHECK (coin_reward >= 0),
+  category      TEXT        NOT NULL DEFAULT 'general' CHECK (category IN ('general', 'work', 'private', 'health')),
+  priority      TEXT        NOT NULL DEFAULT 'medium' CHECK (priority IN ('low', 'medium', 'high')),
+  due_date      TIMESTAMPTZ,
+  notes         TEXT,
+  status        TEXT        NOT NULL DEFAULT 'open' CHECK (status IN ('open', 'in_progress', 'done')),
+  recurrence    TEXT        NOT NULL DEFAULT 'none' CHECK (recurrence IN ('none', 'daily', 'weekly', 'monthly')),
+  subtasks      JSONB       NOT NULL DEFAULT '[]'::jsonb,
   created_at    TIMESTAMPTZ NOT NULL DEFAULT NOW(),
   completed_at  TIMESTAMPTZ
 );
