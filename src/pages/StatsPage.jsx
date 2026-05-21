@@ -25,8 +25,8 @@ export default function StatsPage() {
   return (
     <div className="p-6">
       <div className="mb-6">
-        <h2 className="text-xl font-bold flex items-center gap-2" style={{ color: 'var(--text-primary)' }}>
-          <BarChart2 size={20} style={{ color: 'var(--accent)' }} />
+        <h2 className="text-xl font-bold flex items-center gap-2 text-primary-var">
+          <BarChart2 size={20} className="text-accent-var" />
           Stats
         </h2>
       </div>
@@ -35,35 +35,30 @@ export default function StatsPage() {
       <motion.div
         initial={{ opacity: 0, y: 8 }}
         animate={{ opacity: 1, y: 0 }}
-        className="card p-5 mb-4"
-        style={{ boxShadow: '0 0 24px var(--accent-glow)' }}
+        className="card p-5 mb-4 shadow-[0_0_24px_var(--accent-glow)]"
       >
         <div className="flex items-center gap-4 mb-4">
-          <div
-            className="w-16 h-16 rounded-2xl flex items-center justify-center text-2xl font-bold flex-shrink-0"
-            style={{ background: 'var(--accent)', color: 'var(--bg-primary)' }}
-          >
+          <div className="w-16 h-16 rounded-2xl flex items-center justify-center text-2xl font-bold flex-shrink-0 bg-[var(--accent)] text-[var(--bg-primary)]">
             {profile.level}
           </div>
           <div>
-            <p className="text-xs" style={{ color: 'var(--text-muted)' }}>Current Level</p>
-            <p className="text-2xl font-bold" style={{ color: 'var(--text-primary)' }}>
+            <p className="text-xs text-muted-var">Current Level</p>
+            <p className="text-2xl font-bold text-primary-var">
               Level {profile.level}
             </p>
-            <p className="text-xs" style={{ color: 'var(--accent)' }}>
+            <p className="text-xs text-accent-var">
               {xpLeft} XP to next level
             </p>
           </div>
         </div>
         <div>
-          <div className="flex justify-between text-xs mb-1" style={{ color: 'var(--text-muted)' }}>
+          <div className="flex justify-between text-xs mb-1 text-muted-var">
             <span>{profile.xp % 100} / 100 XP</span>
             <span>{levelPct}%</span>
           </div>
-          <div className="h-3 rounded-full overflow-hidden" style={{ background: 'var(--bg-surface)' }}>
+          <div className="h-3 rounded-full overflow-hidden bg-surface-var">
             <motion.div
-              className="h-full rounded-full"
-              style={{ background: 'var(--accent)' }}
+              className="h-full rounded-full bg-[var(--accent)]"
               initial={{ width: 0 }}
               animate={{ width: `${levelPct}%` }}
               transition={{ duration: 0.8, ease: 'easeOut' }}
@@ -90,7 +85,7 @@ export default function StatsPage() {
             <span className="text-2xl">{s.icon}</span>
             <div>
               <p className={`text-xl font-bold ${s.color}`}>{s.value}</p>
-              <p className="text-xs" style={{ color: 'var(--text-muted)' }}>{s.label}</p>
+              <p className="text-xs text-muted-var">{s.label}</p>
             </div>
           </motion.div>
         ))}
@@ -98,7 +93,7 @@ export default function StatsPage() {
 
       {/* Milestones */}
       <div>
-        <h3 className="text-sm font-semibold mb-3 flex items-center gap-2" style={{ color: 'var(--text-secondary)' }}>
+        <h3 className="text-sm font-semibold mb-3 flex items-center gap-2 text-secondary-var">
           <Trophy size={14} />
           Milestones
         </h3>
@@ -110,12 +105,13 @@ export default function StatsPage() {
               animate={{ opacity: 1, scale: 1 }}
               transition={{ delay: 0.2 + i * 0.04 }}
               className={`card p-3 text-center transition-all ${
-                m.reached ? '' : 'opacity-40'
+                m.reached
+                  ? 'border-[var(--accent-glow)] shadow-[0_0_12px_var(--accent-subtle)]'
+                  : 'opacity-40'
               }`}
-              style={m.reached ? { border: '1px solid var(--accent-glow)', boxShadow: '0 0 12px var(--accent-subtle)' } : {}}
             >
               <span className="text-2xl block mb-1">{m.icon}</span>
-              <p className="text-[10px] font-medium" style={{ color: m.reached ? 'var(--accent)' : 'var(--text-muted)' }}>
+              <p className={`text-[10px] font-medium ${m.reached ? 'text-accent-var' : 'text-muted-var'}`}>
                 {m.label}
               </p>
               {m.reached && <span className="text-[8px] text-emerald-400">✓ Reached</span>}

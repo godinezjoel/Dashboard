@@ -57,7 +57,7 @@ function PetEggling({ health }) {
       <motion.g
         animate={{ scaleY: [1, 0.1, 1] }}
         transition={{ repeat: Infinity, duration: 4, times: [0, 0.1, 0.2], repeatDelay: 3 }}
-        style={{ transformOrigin: '100px 108px' }}
+        transformOrigin="100px 108px"
       >
         <circle cx="88" cy="112" r="5" fill={isDying ? '#6b7280' : '#312e81'} />
         <circle cx="112" cy="112" r="5" fill={isDying ? '#6b7280' : '#312e81'} />
@@ -114,7 +114,7 @@ function PetDragon({ health }) {
         strokeWidth="16" strokeLinecap="round" fill="none"
         animate={{ rotate: [0, -8, 0] }}
         transition={{ repeat: Infinity, duration: 2.5, ease: 'easeInOut' }}
-        style={{ transformOrigin: '68px 95px' }}
+        transformOrigin="68px 95px"
       />
       <motion.path
         d="M132 95 C160 70, 180 80, 170 110"
@@ -122,7 +122,7 @@ function PetDragon({ health }) {
         strokeWidth="16" strokeLinecap="round" fill="none"
         animate={{ rotate: [0, 8, 0] }}
         transition={{ repeat: Infinity, duration: 2.5, ease: 'easeInOut' }}
-        style={{ transformOrigin: '132px 95px' }}
+        transformOrigin="132px 95px"
       />
 
       {/* Body */}
@@ -148,7 +148,7 @@ function PetDragon({ health }) {
       <motion.g
         animate={{ scaleY: [1, 0.1, 1] }}
         transition={{ repeat: Infinity, duration: 5, times: [0, 0.05, 0.15], repeatDelay: 2 }}
-        style={{ transformOrigin: '100px 100px' }}
+        transformOrigin="100px 100px"
       >
         <ellipse cx="87" cy="100" rx="7" ry="8" fill={isDying ? '#374151' : '#052e16'} />
         <ellipse cx="113" cy="100" rx="7" ry="8" fill={isDying ? '#374151' : '#052e16'} />
@@ -168,7 +168,7 @@ function PetDragon({ health }) {
         <motion.g
           animate={{ scaleX: [1, 1.3, 0.9, 1.1, 1], opacity: [0.8, 1, 0.6, 0.9, 0.8] }}
           transition={{ repeat: Infinity, duration: 1.5 }}
-          style={{ transformOrigin: '100px 130px' }}
+          transformOrigin="100px 130px"
         >
           <ellipse cx="100" cy="148" rx="10" ry="6" fill="#f97316" fillOpacity="0.9" />
           <ellipse cx="100" cy="154" rx="6" ry="4" fill="#fbbf24" fillOpacity="0.7" />
@@ -218,7 +218,7 @@ function PetGhost({ health }) {
       <motion.g
         animate={{ scaleY: [1, 0.1, 1] }}
         transition={{ repeat: Infinity, duration: 4.5, times: [0, 0.08, 0.2], repeatDelay: 2.5 }}
-        style={{ transformOrigin: '100px 105px' }}
+        transformOrigin="100px 105px"
       >
         <ellipse cx="86" cy="105" rx="9" ry="10" fill={isDying ? '#374151' : '#312e81'} />
         <ellipse cx="114" cy="105" rx="9" ry="10" fill={isDying ? '#374151' : '#312e81'} />
@@ -293,12 +293,12 @@ function PetPup({ health }) {
       <motion.ellipse cx="65" cy="62" rx="18" ry="26" fill={isDying ? '#6b7280' : '#b45309'}
         animate={{ rotate: [0, -5, 0] }}
         transition={{ repeat: Infinity, duration: 1.5, ease: 'easeInOut' }}
-        style={{ transformOrigin: '65px 62px' }}
+        transformOrigin="65px 62px"
       />
       <motion.ellipse cx="135" cy="62" rx="18" ry="26" fill={isDying ? '#6b7280' : '#b45309'}
         animate={{ rotate: [0, 5, 0] }}
         transition={{ repeat: Infinity, duration: 1.5, ease: 'easeInOut', delay: 0.3 }}
-        style={{ transformOrigin: '135px 62px' }}
+        transformOrigin="135px 62px"
       />
       <ellipse cx="65" cy="65" rx="10" ry="18" fill={isDying ? '#4b5563' : '#fca5a5'} fillOpacity="0.6" />
       <ellipse cx="135" cy="65" rx="10" ry="18" fill={isDying ? '#4b5563' : '#fca5a5'} fillOpacity="0.6" />
@@ -310,7 +310,7 @@ function PetPup({ health }) {
       <motion.g
         animate={{ scaleY: [1, 0.08, 1] }}
         transition={{ repeat: Infinity, duration: 5, times: [0, 0.05, 0.15], repeatDelay: 2 }}
-        style={{ transformOrigin: '100px 85px' }}
+        transformOrigin="100px 85px"
       >
         <circle cx="86" cy="85" r="8" fill={isDying ? '#374151' : '#1c1917'} />
         <circle cx="114" cy="85" r="8" fill={isDying ? '#374151' : '#1c1917'} />
@@ -327,7 +327,7 @@ function PetPup({ health }) {
       <motion.path d="M148 140 Q170 115 165 100" stroke={isDying ? '#6b7280' : '#d97706'} strokeWidth="14" strokeLinecap="round" fill="none"
         animate={{ rotate: [0, 25, 0] }}
         transition={{ repeat: Infinity, duration: 0.6, ease: 'easeInOut' }}
-        style={{ transformOrigin: '148px 140px' }}
+        transformOrigin="148px 140px"
       />
 
       {/* Blush */}
@@ -361,12 +361,12 @@ function PetBunny({ health }) {
       <motion.ellipse cx="75" cy="45" rx="14" ry="40" fill="url(#bunny-body)" filter="url(#bunny-shadow)"
         animate={{ rotate: [-3, 3, -3] }}
         transition={{ repeat: Infinity, duration: 2, ease: 'easeInOut' }}
-        style={{ transformOrigin: '75px 70px' }}
+        transformOrigin="75px 70px"
       />
       <motion.ellipse cx="125" cy="45" rx="14" ry="40" fill="url(#bunny-body)" filter="url(#bunny-shadow)"
         animate={{ rotate: [3, -3, 3] }}
         transition={{ repeat: Infinity, duration: 2, ease: 'easeInOut', delay: 0.3 }}
-        style={{ transformOrigin: '125px 70px' }}
+        transformOrigin="125px 70px"
       />
       <ellipse cx="75" cy="45" rx="6" ry="30" fill={isDying ? '#4b5563' : '#fca5a5'} fillOpacity="0.7" />
       <ellipse cx="125" cy="45" rx="6" ry="30" fill={isDying ? '#4b5563' : '#fca5a5'} fillOpacity="0.7" />
@@ -387,7 +387,7 @@ function PetBunny({ health }) {
       <motion.g
         animate={{ scaleY: [1, 0.1, 1] }}
         transition={{ repeat: Infinity, duration: 4, times: [0, 0.05, 0.15], repeatDelay: 3 }}
-        style={{ transformOrigin: '100px 92px' }}
+        transformOrigin="100px 92px"
       >
         <circle cx="87" cy="92" r="7" fill={isDying ? '#374151' : '#4c1d95'} />
         <circle cx="113" cy="92" r="7" fill={isDying ? '#374151' : '#4c1d95'} />

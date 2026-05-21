@@ -76,7 +76,7 @@ export default function TaskList({ selectedDate, onClearDate }) {
     <div className="space-y-6">
 
       {/* ══ FILTER + SORT BAR ══════════════════════════════════ */}
-      <div className="pt-4 mt-6 border-t" style={{ borderColor: 'var(--border)' }}>
+      <div className="pt-4 mt-6 border-t border-var">
         {/* Date Filter Badge */}
         <AnimatePresence>
           {selectedDate && (
@@ -84,8 +84,7 @@ export default function TaskList({ selectedDate, onClearDate }) {
               initial={{ opacity: 0, y: -10 }}
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, y: -10 }}
-              className="flex items-center justify-between px-4 py-2.5 rounded-xl mb-4"
-              style={{ background: 'var(--accent)', color: 'var(--bg-primary)' }}
+              className="flex items-center justify-between px-4 py-2.5 rounded-xl mb-4 bg-[var(--accent)] text-[var(--bg-primary)]"
             >
               <span className="text-xs font-bold uppercase tracking-wider">
                 Showing tasks for: {selectedDate.toLocaleDateString(undefined, { weekday: 'long', month: 'long', day: 'numeric' })}
@@ -102,22 +101,21 @@ export default function TaskList({ selectedDate, onClearDate }) {
         </AnimatePresence>
 
         <div className="flex items-center justify-between mb-3">
-          <div className="flex items-center gap-1.5" style={{ color: 'var(--text-muted)' }}>
+          <div className="flex items-center gap-1.5 text-muted-var">
             <Filter size={12} />
             <span className="text-[10px] font-bold uppercase tracking-wider">Filter Tasks</span>
           </div>
 
           {/* Sort */}
-          <div className="flex items-center gap-1.5" style={{ color: 'var(--text-muted)' }}>
+          <div className="flex items-center gap-1.5 text-muted-var">
             <ArrowUpDown size={11} />
             <select
               value={sortBy}
               onChange={(e) => setSortBy(e.target.value)}
-              className="text-xs bg-transparent outline-none cursor-pointer"
-              style={{ color: 'var(--text-muted)' }}
+              className="text-xs bg-transparent outline-none cursor-pointer text-muted-var"
             >
               {SORT_OPTIONS.map((o) => (
-                <option key={o.value} value={o.value} style={{ background: '#0a0a0a' }}>
+                <option key={o.value} value={o.value} className="bg-zinc-950 text-muted-var">
                   {o.label}
                 </option>
               ))}
@@ -131,12 +129,11 @@ export default function TaskList({ selectedDate, onClearDate }) {
             <button
               key={c.value}
               onClick={() => setFilterCat(c.value === filterCat && c.value !== 'all' ? 'all' : c.value)}
-              className="px-2.5 py-1 text-xs rounded-lg transition-all"
-              style={
+              className={`px-2.5 py-1 text-xs rounded-lg transition-all border ${
                 filterCat === c.value
-                  ? { background: 'var(--bg-elevated)', color: 'var(--text-primary)', border: '1px solid var(--text-muted)' }
-                  : { background: 'transparent', color: 'var(--text-muted)', border: '1px solid var(--border)' }
-              }
+                  ? 'bg-elevated-var text-primary-var border-[var(--text-muted)]'
+                  : 'bg-transparent text-muted-var border-var'
+              }`}
             >
               {c.label}
               {c.value !== 'all' && (
@@ -159,8 +156,8 @@ export default function TaskList({ selectedDate, onClearDate }) {
               animate={{ opacity: 1 }}
               className="text-center py-10"
             >
-              <CheckCircle2 size={28} className="mx-auto mb-2" style={{ color: 'var(--border)' }} />
-              <p className="text-sm" style={{ color: 'var(--text-muted)' }}>
+              <CheckCircle2 size={28} className="mx-auto mb-2 text-[var(--border)]" />
+              <p className="text-sm text-muted-var">
                 {filterCat === 'all' ? 'No open tasks.' : `No open ${filterCat} tasks.`}
               </p>
             </motion.div>

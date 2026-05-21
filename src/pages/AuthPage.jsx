@@ -38,18 +38,9 @@ export default function AuthPage() {
   }
 
   return (
-    <div
-      className="min-h-screen flex items-center justify-center p-4"
-      style={{ background: 'var(--bg-primary)' }}
-    >
+    <div className="min-h-screen flex items-center justify-center p-4 bg-primary-var">
       {/* Background grid glow */}
-      <div
-        className="fixed inset-0 pointer-events-none"
-        style={{
-          backgroundImage:
-            'radial-gradient(ellipse 80% 50% at 50% -20%, rgba(139,92,246,0.15) 0%, transparent 60%)',
-        }}
-      />
+      <div className="fixed inset-0 pointer-events-none bg-[radial-gradient(ellipse_80%_50%_at_50%_-20%,rgba(139,92,246,0.15)_0%,transparent_60%)]" />
 
       <motion.div
         initial={{ opacity: 0, y: 24, scale: 0.97 }}
@@ -58,10 +49,7 @@ export default function AuthPage() {
         className="w-full max-w-sm relative"
       >
         {/* Card */}
-        <div
-          className="card p-8 rounded-2xl"
-          style={{ boxShadow: '0 24px 64px rgba(0,0,0,0.6)' }}
-        >
+          <div className="card p-8 rounded-2xl shadow-[0_24px_64px_rgba(0,0,0,0.6)]">
           {/* Logo */}
           <div className="text-center mb-8">
             <div
@@ -69,30 +57,24 @@ export default function AuthPage() {
             >
               <Hexagon size={32} strokeWidth={1.5} />
             </div>
-            <h1 className="text-2xl font-bold" style={{ color: 'var(--text-primary)' }}>
+            <h1 className="text-2xl font-bold text-primary-var">
               Life-OS
             </h1>
-            <p className="text-sm mt-1" style={{ color: 'var(--text-muted)' }}>
+            <p className="text-sm mt-1 text-muted-var">
               Your gamified productivity companion
             </p>
           </div>
 
           {/* Tab toggle */}
-          <div
-            className="flex gap-1 mb-6 p-1 rounded-xl"
-            style={{ background: 'var(--bg-surface)' }}
-          >
+          <div className="flex gap-1 mb-6 p-1 rounded-xl bg-surface-var">
             {['login', 'signup'].map((m) => (
               <button
                 key={m}
                 onClick={() => setMode(m)}
-                className="flex-1 py-2 rounded-lg text-sm font-medium transition-all capitalize"
                 id={`auth-tab-${m}`}
-                style={
-                  mode === m
-                    ? { background: 'var(--bg-elevated)', color: 'var(--accent)' }
-                    : { color: 'var(--text-muted)' }
-                }
+                className={`flex-1 py-2 rounded-lg text-sm font-medium transition-all capitalize ${
+                  mode === m ? 'bg-elevated-var text-accent-var' : 'text-muted-var'
+                }`}
               >
                 {m}
               </button>
@@ -107,7 +89,7 @@ export default function AuthPage() {
                 animate={{ opacity: 1, height: 'auto' }}
                 exit={{ opacity: 0, height: 0 }}
               >
-                <label className="block text-xs mb-1.5" style={{ color: 'var(--text-muted)' }}>
+                <label className="block text-xs mb-1.5 text-muted-var">
                   Username (optional)
                 </label>
                 <input
@@ -123,7 +105,7 @@ export default function AuthPage() {
             )}
 
             <div>
-              <label className="block text-xs mb-1.5" style={{ color: 'var(--text-muted)' }}>
+              <label className="block text-xs mb-1.5 text-muted-var">
                 Email
               </label>
               <input
@@ -139,7 +121,7 @@ export default function AuthPage() {
             </div>
 
             <div>
-              <label className="block text-xs mb-1.5" style={{ color: 'var(--text-muted)' }}>
+              <label className="block text-xs mb-1.5 text-muted-var">
                 Password
               </label>
               <input
@@ -170,16 +152,15 @@ export default function AuthPage() {
           </form>
 
           {/* Footer note */}
-          <p className="text-center text-xs mt-5 flex items-center justify-center gap-1" style={{ color: 'var(--text-muted)' }}>
+          <p className="text-center text-xs mt-5 flex items-center justify-center gap-1 text-muted-var">
             {mode === 'signup'
               ? <>A pet will be waiting for you <Egg size={12} className="inline" /></>
               : "Don't have an account? "}
             {mode === 'login' && (
-              <button
-                onClick={() => setMode('signup')}
-                className="underline"
-                style={{ color: 'var(--accent)' }}
-              >
+                <button
+                  onClick={() => setMode('signup')}
+                  className="underline text-accent-var"
+                >
                 Sign up free
               </button>
             )}

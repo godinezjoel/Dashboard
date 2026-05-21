@@ -58,14 +58,14 @@ export default function ShopPage() {
     <div className="p-6">
       {/* Header */}
       <div className="mb-6">
-        <h2 className="text-xl font-bold mb-1 flex items-center gap-2" style={{ color: 'var(--text-primary)' }}>
+        <h2 className="text-xl font-bold mb-1 flex items-center gap-2 text-primary-var">
           <ShoppingBag size={20} />
           Pet Shop
         </h2>
-        <p className="text-sm flex items-center gap-2" style={{ color: 'var(--text-muted)' }}>
+        <p className="text-sm flex items-center gap-2 text-muted-var">
           Choose your companion
           {profile && (
-            <span className="flex items-center gap-1 font-semibold" style={{ color: 'var(--text-secondary)' }}>
+            <span className="flex items-center gap-1 font-semibold text-secondary-var">
               <Coins size={13} /> {profile.coins}
             </span>
           )}
@@ -102,17 +102,17 @@ export default function ShopPage() {
                 </div>
 
                 <div>
-                  <p className="text-sm font-semibold" style={{ color: 'var(--text-primary)' }}>
+                  <p className="text-sm font-semibold text-primary-var">
                     {pet.name}
                   </p>
-                  <p className="text-[10px] mt-0.5 leading-relaxed" style={{ color: 'var(--text-muted)' }}>
+                  <p className="text-[10px] mt-0.5 leading-relaxed text-muted-var">
                     {pet.description}
                   </p>
                 </div>
 
                 {/* Price tag for unowned pets */}
                 {!owned && pet.price_coins > 0 && (
-                  <p className={`text-xs font-semibold flex items-center gap-1 ${canAfford ? '' : 'text-red-400'}`} style={canAfford ? { color: 'var(--text-secondary)' } : {}}>
+                  <p className={`text-xs font-semibold flex items-center gap-1 ${canAfford ? 'text-secondary-var' : 'text-red-400'}`}>
                     <Coins size={11} /> {pet.price_coins}
                   </p>
                 )}
@@ -139,7 +139,7 @@ export default function ShopPage() {
                       {isLoading ? '...' : 'Buy & Activate'}
                     </button>
                   ) : (
-                    <div className="flex items-center justify-center gap-1 text-xs" style={{ color: 'var(--text-muted)' }}>
+                    <div className="flex items-center justify-center gap-1 text-xs text-muted-var">
                       <Lock size={11} /> Need {pet.price_coins}
                     </div>
                   )}

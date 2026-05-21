@@ -171,6 +171,62 @@ body {
     color: var(--text-muted);
   }
 
+  .bg-primary-var {
+    background: var(--bg-primary);
+  }
+
+  .bg-surface-var {
+    background: var(--bg-surface);
+  }
+
+  .bg-card-var {
+    background: var(--bg-card);
+  }
+
+  .bg-elevated-var {
+    background: var(--bg-elevated);
+  }
+
+  .border-var {
+    border-color: var(--border);
+  }
+
+  .text-primary-var {
+    color: var(--text-primary);
+  }
+
+  .text-secondary-var {
+    color: var(--text-secondary);
+  }
+
+  .text-muted-var {
+    color: var(--text-muted);
+  }
+
+  .text-accent-var {
+    color: var(--accent);
+  }
+
+  .icon-btn-muted {
+    color: var(--text-muted);
+  }
+
+  .icon-btn-muted:hover {
+    color: var(--text-primary);
+  }
+
+  .icon-btn-danger:hover {
+    color: #ef4444;
+  }
+
+  .toast-theme {
+    background: var(--bg-elevated) !important;
+    color: var(--text-primary) !important;
+    border: 1px solid var(--border) !important;
+    border-radius: 12px !important;
+    font-size: 13px !important;
+  }
+
   /* Divider */
   .divider {
     height: 1px;
@@ -290,6 +346,10 @@ body {
 
 .animate-xp-gain {
   animation: xpGain 1.2s ease-out forwards;
+}
+
+.thin-scrollbar {
+  scrollbar-width: thin;
 }
 
 /* Shimmer skeleton loading */

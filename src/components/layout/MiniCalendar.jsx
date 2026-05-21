@@ -1,7 +1,6 @@
 import { useState, useMemo } from 'react';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
 import { useGame } from '../../context/GameContext';
-import { CATEGORY_STYLES } from '../tasks/TaskList';
 
 export default function MiniCalendar({ selectedDate, onSelectDate }) {
   const { tasks } = useGame();
@@ -15,7 +14,13 @@ export default function MiniCalendar({ selectedDate, onSelectDate }) {
   const startOffset = firstDayOfMonth === 0 ? 6 : firstDayOfMonth - 1;
 
   const monthNames = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
-  const dayNames = ["Mo", "Tu", "We", "Th", "Fr", "Sa", "Su"];
+const dayNames = ["Mo", "Tu", "We", "Th", "Fr", "Sa", "Su"];
+const CATEGORY_DOT_CLASSES = {
+  work: 'bg-[#60a5fa]',
+  health: 'bg-[#4ade80]',
+  private: 'bg-[#c084fc]',
+  general: 'bg-muted-var',
+};
 
   function handlePrevMonth() {
     setCurrentMonth(new Date(currentMonth.getFullYear(), currentMonth.getMonth() - 1, 1));
@@ -44,17 +49,17 @@ export default function MiniCalendar({ selectedDate, onSelectDate }) {
   const today = new Date();
 
   return (
-    <div className="p-4 rounded-2xl mb-6" style={{ background: 'var(--bg-surface)', border: '1px solid var(--border)' }}>
+    <div className="p-4 rounded-2xl mb-6 bg-surface-var border border-var">
       {/* Header */}
       <div className="flex items-center justify-between mb-4">
-        <span className="text-xs font-bold uppercase tracking-wider" style={{ color: 'var(--text-primary)' }}>
+        <span className="text-xs font-bold uppercase tracking-wider text-primary-var">
           {monthNames[currentMonth.getMonth()]} {currentMonth.getFullYear()}
         </span>
         <div className="flex items-center gap-1">
-          <button onClick={handlePrevMonth} className="p-1 rounded-md transition-colors hover:bg-white/5" style={{ color: 'var(--text-muted)' }}>
+          <button onClick={handlePrevMonth} className="p-1 rounded-md transition-colors hover:bg-white/5 text-muted-var">
             <ChevronLeft size={14} />
           </button>
-          <button onClick={handleNextMonth} className="p-1 rounded-md transition-colors hover:bg-white/5" style={{ color: 'var(--text-muted)' }}>
+          <button onClick={handleNextMonth} className="p-1 rounded-md transition-colors hover:bg-white/5 text-muted-var">
             <ChevronRight size={14} />
           </button>
         </div>
@@ -64,7 +69,7 @@ export default function MiniCalendar({ selectedDate, onSelectDate }) {
       <div className="grid grid-cols-7 gap-1">
         {/* Day headers */}
         {dayNames.map(day => (
-          <div key={day} className="text-center text-[9px] font-bold uppercase mb-2" style={{ color: 'var(--text-muted)' }}>
+          <div key={day} className="text-center text-[9px] font-bold uppercase mb-2 text-muted-var">
             {day}
           </div>
         ))}
@@ -89,15 +94,13 @@ export default function MiniCalendar({ selectedDate, onSelectDate }) {
             <button
               key={dayNumber}
               onClick={() => onSelectDate(isSelected ? null : dateObj)}
-              className="relative h-7 w-full flex flex-col items-center justify-center rounded-lg text-xs font-medium transition-colors"
-              style={{
-                background: isSelected ? 'var(--accent)' : 'transparent',
-                color: isSelected ? 'var(--bg-primary)' : isToday ? 'var(--text-primary)' : 'var(--text-muted)',
-                fontWeight: isToday || isSelected ? 'bold' : 'normal',
-                border: isToday && !isSelected ? '1px solid var(--border)' : '1px solid transparent'
-              }}
-              onMouseEnter={e => { if (!isSelected) e.currentTarget.style.background = 'rgba(255,255,255,0.05)' }}
-              onMouseLeave={e => { if (!isSelected) e.currentTarget.style.background = 'transparent' }}
+              className={`relative h-7 w-full flex flex-col items-center justify-center rounded-lg text-xs transition-colors border ${
+                isSelected
+                  ? 'bg-[var(--accent)] text-[var(--bg-primary)] font-bold border-[var(--accent)]'
+                  : isToday
+                    ? 'text-primary-var font-bold border-var hover:bg-white/5'
+                    : 'text-muted-var border-transparent hover:bg-white/5'
+              }`}
             >
               <span className="mb-1">{dayNumber}</span>
               {hasTask && (
@@ -105,12 +108,11 @@ export default function MiniCalendar({ selectedDate, onSelectDate }) {
                   {categories.map((cat, idx) => (
                     <span 
                       key={idx}
-                      className="w-1 h-1 rounded-full" 
-                      style={{ 
-                        background: isSelected 
-                          ? 'var(--bg-primary)' 
-                          : CATEGORY_STYLES[cat]?.color || CATEGORY_STYLES.general.color 
-                      }} 
+                      className={`w-1 h-1 rounded-full ${
+                        isSelected
+                          ? 'bg-[var(--bg-primary)]'
+                          : CATEGORY_DOT_CLASSES[cat] || CATEGORY_DOT_CLASSES.general
+                      }`}
                     />
                   ))}
                 </div>

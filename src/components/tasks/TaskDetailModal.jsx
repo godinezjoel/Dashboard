@@ -102,8 +102,7 @@ export default function TaskDetailModal({ task, isOpen, onClose }) {
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             onClick={onClose}
-            className="fixed inset-0 z-40"
-            style={{ background: 'rgba(0,0,0,0.6)', backdropFilter: 'blur(4px)' }}
+            className="fixed inset-0 z-40 bg-black/60 backdrop-blur-sm"
           />
 
           {/* Modal content */}
@@ -113,42 +112,34 @@ export default function TaskDetailModal({ task, isOpen, onClose }) {
             exit={{ opacity: 0, scale: 0.95, y: 20 }}
             className="fixed inset-0 z-50 flex items-center justify-center p-4 sm:p-6 pointer-events-none"
           >
-            <div 
-              className="w-full max-w-lg rounded-2xl shadow-2xl flex flex-col pointer-events-auto max-h-[90vh] overflow-hidden"
-              style={{ background: 'var(--bg-surface)', border: '1px solid var(--border)' }}
-            >
+            <div className="w-full max-w-lg rounded-2xl shadow-2xl flex flex-col pointer-events-auto max-h-[90vh] overflow-hidden bg-surface-var border border-var">
               {/* Header */}
-              <div className="flex items-center justify-between p-5 border-b" style={{ borderColor: 'var(--border)' }}>
+              <div className="flex items-center justify-between p-5 border-b border-var">
                 <input
                   type="text"
                   value={title}
                   onChange={(e) => setTitle(e.target.value)}
-                  className="text-lg font-bold bg-transparent outline-none flex-1 truncate"
-                  style={{ color: 'var(--text-primary)' }}
+                  className="text-lg font-bold bg-transparent outline-none flex-1 truncate text-primary-var"
                 />
                 <button 
                   onClick={onClose}
-                  className="p-1.5 rounded-lg transition-colors ml-4"
-                  style={{ color: 'var(--text-muted)' }}
-                  onMouseEnter={e => e.currentTarget.style.color = 'var(--text-primary)'}
-                  onMouseLeave={e => e.currentTarget.style.color = 'var(--text-muted)'}
+                  className="p-1.5 rounded-lg transition-colors ml-4 text-muted-var icon-btn-muted"
                 >
                   <X size={18} />
                 </button>
               </div>
 
               {/* Body */}
-              <div className="p-5 overflow-y-auto space-y-6" style={{ scrollbarWidth: 'thin' }}>
+              <div className="p-5 overflow-y-auto space-y-6 thin-scrollbar">
                 
                 {/* Meta details row */}
                 <div className="flex flex-wrap gap-4">
                   <div className="flex-1 min-w-[140px]">
-                    <label className="block text-[10px] font-bold uppercase tracking-wider mb-1.5" style={{ color: 'var(--text-muted)' }}>Status</label>
+                    <label className="block text-[10px] font-bold uppercase tracking-wider mb-1.5 text-muted-var">Status</label>
                     <select
                       value={status}
                       onChange={(e) => setStatus(e.target.value)}
-                      className="w-full text-sm p-2 rounded-lg outline-none cursor-pointer"
-                      style={{ background: 'var(--bg-elevated)', border: '1px solid var(--border)', color: 'var(--text-primary)' }}
+                      className="w-full text-sm p-2 rounded-lg outline-none cursor-pointer bg-elevated-var border border-var text-primary-var"
                     >
                       <option value="open">Open</option>
                       <option value="in_progress">In Progress</option>
@@ -157,14 +148,13 @@ export default function TaskDetailModal({ task, isOpen, onClose }) {
                   </div>
 
                   <div className="flex-1 min-w-[140px]">
-                    <label className="flex items-center gap-1.5 text-[10px] font-bold uppercase tracking-wider mb-1.5" style={{ color: 'var(--text-muted)' }}>
+                    <label className="flex items-center gap-1.5 text-[10px] font-bold uppercase tracking-wider mb-1.5 text-muted-var">
                       <Repeat size={12} /> Repeat
                     </label>
                     <select
                       value={recurrence}
                       onChange={(e) => setRecurrence(e.target.value)}
-                      className="w-full text-sm p-2 rounded-lg outline-none cursor-pointer"
-                      style={{ background: 'var(--bg-elevated)', border: '1px solid var(--border)', color: 'var(--text-primary)' }}
+                      className="w-full text-sm p-2 rounded-lg outline-none cursor-pointer bg-elevated-var border border-var text-primary-var"
                     >
                       <option value="none">Never</option>
                       <option value="daily">Daily</option>
@@ -174,41 +164,39 @@ export default function TaskDetailModal({ task, isOpen, onClose }) {
                   </div>
 
                   <div className="flex-1 min-w-[180px]">
-                    <label className="flex items-center gap-1.5 text-[10px] font-bold uppercase tracking-wider mb-1.5" style={{ color: 'var(--text-muted)' }}>
+                    <label className="flex items-center gap-1.5 text-[10px] font-bold uppercase tracking-wider mb-1.5 text-muted-var">
                       <Calendar size={12} /> Due Date
                     </label>
                     <input
                       type="datetime-local"
                       value={dueDate}
                       onChange={(e) => setDueDate(e.target.value)}
-                      className="w-full text-sm p-2 rounded-lg outline-none"
-                      style={{ background: 'var(--bg-elevated)', border: '1px solid var(--border)', color: 'var(--text-primary)' }}
+                      className="w-full text-sm p-2 rounded-lg outline-none bg-elevated-var border border-var text-primary-var"
                     />
                   </div>
                 </div>
 
                 {/* Notes */}
                 <div>
-                  <label className="flex items-center gap-1.5 text-[10px] font-bold uppercase tracking-wider mb-1.5" style={{ color: 'var(--text-muted)' }}>
+                  <label className="flex items-center gap-1.5 text-[10px] font-bold uppercase tracking-wider mb-1.5 text-muted-var">
                     <AlignLeft size={12} /> Notes
                   </label>
                   <textarea
                     value={notes}
                     onChange={(e) => setNotes(e.target.value)}
                     placeholder="Add details, links, or context..."
-                    className="w-full text-sm p-3 rounded-lg outline-none min-h-[100px] resize-y"
-                    style={{ background: 'var(--bg-elevated)', border: '1px solid var(--border)', color: 'var(--text-primary)' }}
+                    className="w-full text-sm p-3 rounded-lg outline-none min-h-[100px] resize-y bg-elevated-var border border-var text-primary-var"
                   />
                 </div>
 
                 {/* Subtasks */}
                 <div>
                   <div className="flex items-center justify-between mb-2">
-                    <label className="flex items-center gap-1.5 text-[10px] font-bold uppercase tracking-wider" style={{ color: 'var(--text-muted)' }}>
+                    <label className="flex items-center gap-1.5 text-[10px] font-bold uppercase tracking-wider text-muted-var">
                       <CheckSquare size={12} /> Subtasks
                     </label>
                     {subtasks.length > 0 && (
-                      <span className="text-[10px] font-mono font-bold" style={{ color: 'var(--text-secondary)' }}>
+                      <span className="text-[10px] font-mono font-bold text-secondary-var">
                         {completedSubtasks}/{subtasks.length}
                       </span>
                     )}
@@ -218,23 +206,20 @@ export default function TaskDetailModal({ task, isOpen, onClose }) {
                   <div className="space-y-2 mb-3">
                     {subtasks.map((sub) => (
                       <div key={sub.id} className="flex items-start gap-2 group">
-                        <button
-                          onClick={() => toggleSubtask(sub.id)}
-                          className="mt-0.5 flex-shrink-0 w-4 h-4 rounded-[4px] border flex items-center justify-center transition-colors"
-                          style={{
-                            borderColor: sub.is_done ? 'var(--accent)' : 'var(--text-muted)',
-                            background: sub.is_done ? 'var(--accent)' : 'transparent',
-                          }}
-                        >
+                          <button
+                            onClick={() => toggleSubtask(sub.id)}
+                            className={`mt-0.5 flex-shrink-0 w-4 h-4 rounded-[4px] border flex items-center justify-center transition-colors ${
+                              sub.is_done ? 'border-[var(--accent)] bg-[var(--accent)]' : 'border-[var(--text-muted)] bg-transparent'
+                            }`}
+                          >
                           {sub.is_done && <motion.svg initial={{ scale: 0 }} animate={{ scale: 1 }} width="10" height="10" viewBox="0 0 12 12" fill="none"><path d="M2 6l3 3 5-5" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" /></motion.svg>}
                         </button>
-                        <span className={`flex-1 text-sm ${sub.is_done ? 'line-through opacity-50' : ''}`} style={{ color: 'var(--text-primary)' }}>
+                        <span className={`flex-1 text-sm text-primary-var ${sub.is_done ? 'line-through opacity-50' : ''}`}>
                           {sub.title}
                         </span>
                         <button
                           onClick={() => deleteSubtask(sub.id)}
-                          className="opacity-0 group-hover:opacity-100 p-1 transition-opacity"
-                          style={{ color: 'var(--text-muted)' }}
+                          className="opacity-0 group-hover:opacity-100 p-1 transition-opacity text-muted-var"
                         >
                           <Trash2 size={12} />
                         </button>
@@ -249,14 +234,12 @@ export default function TaskDetailModal({ task, isOpen, onClose }) {
                       value={newSubtask}
                       onChange={(e) => setNewSubtask(e.target.value)}
                       placeholder="Add a subtask..."
-                      className="flex-1 text-sm p-2 rounded-lg outline-none"
-                      style={{ background: 'var(--bg-elevated)', border: '1px solid var(--border)', color: 'var(--text-primary)' }}
+                      className="flex-1 text-sm p-2 rounded-lg outline-none bg-elevated-var border border-var text-primary-var"
                     />
                     <button
                       type="submit"
                       disabled={!newSubtask.trim()}
-                      className="p-2 rounded-lg flex items-center justify-center transition-opacity"
-                      style={{ background: 'var(--accent)', color: 'var(--bg-primary)' }}
+                      className="p-2 rounded-lg flex items-center justify-center transition-opacity bg-[var(--accent)] text-[var(--bg-primary)]"
                     >
                       <Plus size={16} />
                     </button>
@@ -265,17 +248,17 @@ export default function TaskDetailModal({ task, isOpen, onClose }) {
               </div>
 
               {/* Footer */}
-              <div className="p-5 border-t flex items-center justify-between" style={{ borderColor: 'var(--border)' }}>
+              <div className="p-5 border-t border-var flex items-center justify-between">
                 <div className="flex items-center gap-3">
-                  <span className="flex items-center gap-1 text-[10px] font-mono font-bold" style={{ color: 'var(--text-secondary)' }}>
+                  <span className="flex items-center gap-1 text-[10px] font-mono font-bold text-secondary-var">
                     <Zap size={10} /> {task.xp_reward} XP
                   </span>
-                  <span className="flex items-center gap-1 text-[10px] font-mono font-bold" style={{ color: 'var(--text-muted)' }}>
+                  <span className="flex items-center gap-1 text-[10px] font-mono font-bold text-muted-var">
                     <Coins size={10} /> {task.coin_reward}
                   </span>
                 </div>
                 <div className="flex gap-3">
-                  <button onClick={onClose} className="px-4 py-2 text-sm font-bold rounded-xl btn-ghost" style={{ color: 'var(--text-muted)' }}>
+                  <button onClick={onClose} className="px-4 py-2 text-sm font-bold rounded-xl btn-ghost text-muted-var">
                     Cancel
                   </button>
                   <button onClick={handleSave} disabled={isSaving} className="px-5 py-2 text-sm font-bold rounded-xl btn-primary">

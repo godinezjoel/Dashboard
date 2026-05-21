@@ -8,6 +8,7 @@ A personal, gamified productivity dashboard built with React, Vite, Tailwind CSS
 - **Gamification**: A virtual pet companion that loses health over time. Completing tasks feeds the pet, keeping its health bar full.
 - **Level & Shop**: Gain levels based on your XP. Use earned coins in the shop to unlock new pet sprites or UI themes.
 - **Themes**: Multiple beautiful dark-mode themes (Default, Cyberpunk, Forest).
+- **Weekly Journal**: Reflect every week with repeating prompts, a 1-5 mood rating, and mood history analytics.
 - **Supabase Backend**: Fully integrated with Supabase for Auth (Email/Password) and PostgreSQL database, including Row Level Security (RLS) so your data is private.
 
 ## Setup Instructions

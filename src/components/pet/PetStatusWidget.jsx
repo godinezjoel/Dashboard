@@ -41,18 +41,11 @@ export default function PetStatusWidget() {
       transition={{ type: 'spring', stiffness: 300, damping: 24 }}
       className="fixed top-4 right-4 z-50 w-56 select-none"
     >
-      <div
-        className="card p-3 backdrop-blur-md"
-        style={{
-          background: 'rgba(26, 27, 46, 0.85)',
-          border: healthState === 'critical'
-            ? '1px solid rgba(239, 68, 68, 0.5)'
-            : 'var(--border)',
-          boxShadow: healthState === 'critical'
-            ? '0 0 24px rgba(239,68,68,0.25), 0 8px 32px rgba(0,0,0,0.4)'
-            : '0 8px 32px rgba(0,0,0,0.4)',
-        }}
-      >
+      <div className={`card p-3 backdrop-blur-md bg-[rgba(26,27,46,0.85)] shadow-[0_8px_32px_rgba(0,0,0,0.4)] ${
+        healthState === 'critical'
+          ? 'border-red-500/50 shadow-[0_0_24px_rgba(239,68,68,0.25),0_8px_32px_rgba(0,0,0,0.4)]'
+          : ''
+      }`}>
         {/* Pet + Info */}
         <div className="flex items-center gap-3 mb-2.5">
           {/* Pet sprite */}
@@ -71,8 +64,7 @@ export default function PetStatusWidget() {
           <div className="flex-1 min-w-0">
             <div className="flex items-center justify-between gap-1">
               <span
-                className="text-xs font-semibold truncate"
-                style={{ color: 'var(--text-primary)' }}
+                className="text-xs font-semibold truncate text-primary-var"
               >
                 {petName}
               </span>
@@ -89,27 +81,19 @@ export default function PetStatusWidget() {
         {/* Health Bar */}
         <div className="mb-2">
           <div className="flex justify-between mb-1">
-            <span className="text-[10px]" style={{ color: 'var(--text-muted)' }}>HP</span>
+            <span className="text-[10px] text-muted-var">HP</span>
             <span className={`text-[10px] font-mono font-medium ${
               healthState === 'critical' ? 'text-red-400' : 'text-emerald-400'
             }`}>
               {Math.round(health)}%
             </span>
           </div>
-          <div
-            className="h-1.5 rounded-full overflow-hidden"
-            style={{ background: 'var(--bg-surface)' }}
-          >
+          <div className="h-1.5 rounded-full overflow-hidden bg-surface-var">
             <motion.div
               className={`h-full rounded-full ${barColor}`}
               initial={{ width: 0 }}
               animate={{ width: `${health}%` }}
               transition={{ duration: 0.6, ease: 'easeOut' }}
-              style={{
-                boxShadow: healthState === 'critical'
-                  ? '0 0 6px rgba(239,68,68,0.6)'
-                  : undefined,
-              }}
             />
           </div>
         </div>
@@ -117,15 +101,12 @@ export default function PetStatusWidget() {
         {/* XP Bar */}
         <div>
           <div className="flex justify-between mb-1">
-            <span className="text-[10px]" style={{ color: 'var(--text-muted)' }}>XP</span>
-            <span className="text-[10px] font-mono" style={{ color: 'var(--accent)' }}>
+            <span className="text-[10px] text-muted-var">XP</span>
+            <span className="text-[10px] font-mono text-accent-var">
               {profile.xp} total
             </span>
           </div>
-          <div
-            className="h-1 rounded-full overflow-hidden"
-            style={{ background: 'var(--bg-surface)' }}
-          >
+          <div className="h-1 rounded-full overflow-hidden bg-surface-var">
             <motion.div
               className="h-full rounded-full bg-violet-500"
               initial={{ width: 0 }}
@@ -136,11 +117,8 @@ export default function PetStatusWidget() {
         </div>
 
         {/* Coins */}
-        <div
-          className="mt-2.5 flex items-center justify-between pt-2"
-          style={{ borderTop: '1px solid var(--border)' }}
-        >
-          <span className="text-[10px]" style={{ color: 'var(--text-muted)' }}>Coins</span>
+        <div className="mt-2.5 flex items-center justify-between pt-2 border-t border-var">
+          <span className="text-[10px] text-muted-var">Coins</span>
           <span className="text-xs font-semibold text-amber-400 flex items-center gap-1">
             <span>🪙</span>
             {profile.coins.toLocaleString()}

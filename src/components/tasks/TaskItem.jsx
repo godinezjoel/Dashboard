@@ -71,10 +71,10 @@ export default function TaskItem({ task }) {
   };
 
   const CATEGORY_STYLES = {
-    work: { background: 'rgba(59, 130, 246, 0.15)', color: '#60a5fa', border: '1px solid rgba(59, 130, 246, 0.3)' },
-    health: { background: 'rgba(34, 197, 94, 0.15)', color: '#4ade80', border: '1px solid rgba(34, 197, 94, 0.3)' },
-    private: { background: 'rgba(168, 85, 247, 0.15)', color: '#c084fc', border: '1px solid rgba(168, 85, 247, 0.3)' },
-    general: { background: 'var(--bg-elevated)', color: 'var(--text-muted)', border: '1px solid var(--border)' }
+    work: 'bg-[rgba(59,130,246,0.15)] text-[#60a5fa] border border-[rgba(59,130,246,0.3)]',
+    health: 'bg-[rgba(34,197,94,0.15)] text-[#4ade80] border border-[rgba(34,197,94,0.3)]',
+    private: 'bg-[rgba(168,85,247,0.15)] text-[#c084fc] border border-[rgba(168,85,247,0.3)]',
+    general: 'bg-elevated-var text-muted-var border border-var'
   };
 
   const catStyle = CATEGORY_STYLES[task.category || 'general'] || CATEGORY_STYLES.general;
@@ -84,22 +84,22 @@ export default function TaskItem({ task }) {
       <div
         onClick={handleCardClick}
         className={`flex items-center gap-3 px-4 py-3.5 rounded-xl mb-2 transition-all duration-200 cursor-pointer ${
-          isVisuallyDone ? 'opacity-50' : 'hover:border-accent/30'
-        }`}
-        style={{
-          background: 'var(--bg-card)',
-          border: `1px solid ${task.status === 'in_progress' && !isVisuallyDone ? 'var(--accent)' : 'var(--border)'}`,
-        }}
+          isVisuallyDone ? 'opacity-50 border-var' : 'hover:border-accent/30'
+        } ${
+          task.status === 'in_progress' && !isVisuallyDone
+            ? 'border-[var(--accent)]'
+            : 'border-var'
+        } bg-card-var border`}
       >
         {/* Checkbox */}
         <button
           onClick={handleComplete}
           disabled={isVisuallyDone || completing}
-          className="flex-shrink-0 w-5 h-5 rounded-md border-2 flex items-center justify-center transition-all duration-200"
-          style={{
-            borderColor: isVisuallyDone ? 'var(--accent)' : 'var(--text-muted)',
-            background: isVisuallyDone ? 'var(--accent)' : 'transparent',
-          }}
+          className={`flex-shrink-0 w-5 h-5 rounded-md border-2 flex items-center justify-center transition-all duration-200 ${
+            isVisuallyDone
+              ? 'border-[var(--accent)] bg-[var(--accent)]'
+              : 'border-[var(--text-muted)] bg-transparent'
+          }`}
           id={`task-check-${task.id}`}
           aria-label={isVisuallyDone ? 'Completed' : 'Mark as done'}
         >
@@ -136,8 +136,7 @@ export default function TaskItem({ task }) {
         {/* Category badge */}
         {!isVisuallyDone && (
           <span
-            className="text-[8px] px-1.5 py-0.5 rounded-md flex-shrink-0 uppercase tracking-widest font-bold"
-            style={catStyle}
+            className={`text-[8px] px-1.5 py-0.5 rounded-md flex-shrink-0 uppercase tracking-widest font-bold ${catStyle}`}
           >
             {task.category || 'general'}
           </span>
@@ -152,8 +151,7 @@ export default function TaskItem({ task }) {
               onChange={(e) => setEditTitle(e.target.value)}
               onKeyDown={handleKeyDown}
               autoFocus
-              className="flex-1 text-sm bg-transparent outline-none px-1 py-0.5 rounded-md"
-              style={{ color: 'var(--text-primary)', border: '1px solid var(--accent)' }}
+              className="flex-1 text-sm bg-transparent outline-none px-1 py-0.5 rounded-md text-primary-var border border-[var(--accent)]"
             />
             <button onClick={handleSaveEdit} className="p-1 rounded-md text-green-500 hover:bg-white/5 transition-colors">
               <Check size={14} />
@@ -164,9 +162,8 @@ export default function TaskItem({ task }) {
             <span
               onDoubleClick={() => !isVisuallyDone && setIsEditing(true)}
               className={`text-sm truncate transition-all duration-200 ${
-                isVisuallyDone ? 'line-through' : ''
+                isVisuallyDone ? 'line-through text-muted-var' : 'text-primary-var'
               }`}
-              style={{ color: isVisuallyDone ? 'var(--text-muted)' : 'var(--text-primary)' }}
             >
               {task.title}
             </span>
@@ -182,7 +179,7 @@ export default function TaskItem({ task }) {
                 )}
                 
                 {task.due_date && (
-                  <span className="flex items-center gap-1 text-[10px]" style={{ color: 'var(--text-secondary)' }}>
+                  <span className="flex items-center gap-1 text-[10px] text-secondary-var">
                     <Calendar size={10} />
                     {new Date(task.due_date).toLocaleDateString(undefined, { month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' })}
                   </span>
@@ -190,24 +187,23 @@ export default function TaskItem({ task }) {
                 
                 {hasSubtasks && (
                   <div className="flex items-center gap-2">
-                    <span className="flex items-center gap-1 text-[10px]" style={{ color: 'var(--text-muted)' }}>
+                    <span className="flex items-center gap-1 text-[10px] text-muted-var">
                       <CheckSquare size={10} />
                       {completedSubtasksCount}/{task.subtasks.length}
                     </span>
-                    <div className="h-1.5 w-16 rounded-full overflow-hidden" style={{ background: 'var(--bg-elevated)' }}>
+                    <div className="h-1.5 w-16 rounded-full overflow-hidden bg-elevated-var">
                       <motion.div 
                         initial={{ width: 0 }}
                         animate={{ width: `${(completedSubtasksCount / task.subtasks.length) * 100}%` }}
                         transition={{ duration: 0.5, ease: 'easeOut' }}
-                        className="h-full rounded-full"
-                        style={{ background: 'var(--accent)' }}
+                        className="h-full rounded-full bg-[var(--accent)]"
                       />
                     </div>
                   </div>
                 )}
                 
                 {task.notes && (
-                  <span className="flex items-center gap-1 text-[10px]" style={{ color: 'var(--text-muted)' }}>
+                  <span className="flex items-center gap-1 text-[10px] text-muted-var">
                     <AlignLeft size={10} />
                   </span>
                 )}
@@ -225,20 +221,14 @@ export default function TaskItem({ task }) {
           <div className="flex items-center gap-1 flex-shrink-0">
             <button
               onClick={() => setIsEditing(true)}
-              className="p-1.5 rounded-lg transition-colors"
-              style={{ color: 'var(--text-muted)' }}
-              onMouseEnter={e => e.currentTarget.style.color = 'var(--text-primary)'}
-              onMouseLeave={e => e.currentTarget.style.color = 'var(--text-muted)'}
+              className="p-1.5 rounded-lg transition-colors text-muted-var icon-btn-muted"
               aria-label="Edit task"
             >
               <Edit2 size={13} />
             </button>
             <button
               onClick={handleDelete}
-              className="p-1.5 rounded-lg transition-colors"
-              style={{ color: 'var(--text-muted)' }}
-              onMouseEnter={e => e.currentTarget.style.color = '#ef4444'}
-              onMouseLeave={e => e.currentTarget.style.color = 'var(--text-muted)'}
+              className="p-1.5 rounded-lg transition-colors text-muted-var icon-btn-danger"
               aria-label="Delete task"
             >
               <Trash2 size={13} />
@@ -249,10 +239,7 @@ export default function TaskItem({ task }) {
         {isVisuallyDone && (
           <button
             onClick={handleDelete}
-            className="flex-shrink-0 p-1.5 rounded-lg transition-colors"
-            style={{ color: 'var(--text-muted)' }}
-            onMouseEnter={e => e.currentTarget.style.color = '#ef4444'}
-            onMouseLeave={e => e.currentTarget.style.color = 'var(--text-muted)'}
+            className="flex-shrink-0 p-1.5 rounded-lg transition-colors text-muted-var icon-btn-danger"
             aria-label="Delete task"
           >
             <Trash2 size={13} />
@@ -271,17 +258,16 @@ export default function TaskItem({ task }) {
               scale: [0.5, 1.2, 1, 0.8] 
             }}
             transition={{ duration: 1.5, times: [0, 0.15, 0.8, 1], ease: 'easeOut' }}
-            className="absolute left-1/2 top-0 pointer-events-none whitespace-nowrap z-50 flex flex-col items-center gap-1.5"
-            style={{ transform: 'translateX(-50%)' }}
+            className="absolute left-1/2 -translate-x-1/2 top-0 pointer-events-none whitespace-nowrap z-50 flex flex-col items-center gap-1.5"
           >
-            <span className="text-[10px] font-black uppercase tracking-widest px-2.5 py-0.5 rounded-full shadow-lg" style={{ background: 'var(--accent)', color: 'var(--bg-primary)' }}>
+            <span className="text-[10px] font-black uppercase tracking-widest px-2.5 py-0.5 rounded-full shadow-lg bg-[var(--accent)] text-[var(--bg-primary)]">
               Completed!
             </span>
-            <div className="flex items-center gap-2 px-3 py-1.5 rounded-full shadow-2xl backdrop-blur-md" style={{ background: 'rgba(255,255,255,0.1)', border: '1px solid var(--accent-glow)' }}>
-              <span className="flex items-center gap-1 text-xs font-bold" style={{ color: '#fbbf24' }}>
+            <div className="flex items-center gap-2 px-3 py-1.5 rounded-full shadow-2xl backdrop-blur-md bg-white/10 border border-[var(--accent-glow)]">
+              <span className="flex items-center gap-1 text-xs font-bold text-amber-300">
                 <Zap size={12} fill="currentColor" /> +{showReward.xp}
               </span>
-              <span className="flex items-center gap-1 text-xs font-bold" style={{ color: '#f59e0b' }}>
+              <span className="flex items-center gap-1 text-xs font-bold text-amber-500">
                 <Coins size={12} fill="currentColor" /> +{showReward.coins}
               </span>
             </div>
