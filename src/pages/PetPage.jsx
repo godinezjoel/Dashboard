@@ -4,6 +4,7 @@ import { useGame } from '../context/GameContext';
 import { Heart, Flame, Pencil, Check } from 'lucide-react';
 import { calculateCurrentHealth } from '../lib/gameLogic';
 import { getPetComponent } from '../components/pets/PetSprites';
+import './PetPage.css';
 
 export default function PetPage() {
   const { activePet, devUpdateProfile, profile } = useGame();
@@ -27,57 +28,48 @@ export default function PetPage() {
     setIsRenaming(false);
   };
 
-  const healthColor = health > 60 ? '#4ade80' : health > 30 ? '#f59e0b' : '#ef4444';
-  const glowColor   = health > 60 ? '#4ade80' : health > 30 ? '#f59e0b' : '#ef4444';
-  const healthTextClass = health > 60 ? 'text-green-400' : health > 30 ? 'text-amber-500' : 'text-red-500';
-  const glowClass = health > 60
-    ? 'bg-[radial-gradient(circle,#4ade80_0%,transparent_70%)]'
-    : health > 30
-      ? 'bg-[radial-gradient(circle,#f59e0b_0%,transparent_70%)]'
-      : 'bg-[radial-gradient(circle,#ef4444_0%,transparent_70%)]';
-  const glowBarClass = health > 60 ? 'bg-green-400' : health > 30 ? 'bg-amber-500' : 'bg-red-500';
-
+  const statusState = health > 60 ? 'thriving' : health > 30 ? 'low' : 'critical';
   const PetComponent = activePet?.pet?.name ? getPetComponent(activePet.pet.name) : null;
 
   if (!activePet) {
     return (
-      <div className="min-h-screen flex flex-col items-center justify-center p-6 bg-primary-var">
-        <div className="text-center space-y-4">
-          <p className="text-5xl">🥚</p>
-          <p className="text-lg font-bold text-primary-var">No active pet</p>
-          <p className="text-sm text-muted-var">Head over to the Shop to get your first companion!</p>
+      <div className="pet-page-container">
+        <div style={{ textAlign: 'center', display: 'flex', flexDirection: 'column', gap: '16px' }}>
+          <p style={{ fontSize: '48px', margin: 0 }}>🥚</p>
+          <p style={{ fontSize: '18px', fontWeight: 'bold', color: 'var(--text-primary)', margin: 0 }}>No active pet</p>
+          <p style={{ fontSize: '14px', color: 'var(--text-muted)', margin: 0 }}>Head over to the Shop to get your first companion!</p>
         </div>
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen flex flex-col items-center justify-center p-6 relative overflow-hidden bg-primary-var">
+    <div className="pet-page-container">
       {/* Radial ambient background glow */}
-      <div className="absolute inset-0 flex items-center justify-center pointer-events-none z-0">
+      <div className="ambient-glow-wrapper">
         <motion.div
-          className={`rounded-full blur-3xl w-[500px] h-[500px] ${glowClass}`}
-          animate={{ opacity: [0.12, 0.22, 0.12], scale: [1, 1.1, 1] }}
+          className={`ambient-glow ${statusState}`}
+          animate={{ opacity: [0.6, 1.0, 0.6], scale: [1, 1.1, 1] }}
           transition={{ repeat: Infinity, duration: 4, ease: 'easeInOut' }}
         />
       </div>
 
-      <div className="relative z-10 flex flex-col items-center w-full max-w-sm">
+      <div className="pet-content-wrapper">
 
         {/* Streak chip */}
         <motion.div
           initial={{ opacity: 0, y: -20 }}
           animate={{ opacity: 1, y: 0 }}
-          className="mb-10 flex items-center gap-2 px-5 py-2 rounded-full backdrop-blur-sm bg-surface-var border border-var"
+          className="streak-chip"
         >
           <Flame size={14} className={streak > 0 ? 'text-orange-500' : 'text-muted-var'} />
-          <span className="text-xs font-black uppercase tracking-widest text-secondary-var">
+          <span className="streak-chip-text">
             {streak} Day Streak
           </span>
         </motion.div>
 
         {/* Pet Name */}
-        <div className="mb-6 flex items-center justify-center min-h-[44px]">
+        <div className="pet-name-container">
           <AnimatePresence mode="wait">
             {isRenaming ? (
               <motion.div
@@ -85,11 +77,11 @@ export default function PetPage() {
                 initial={{ opacity: 0, scale: 0.9 }}
                 animate={{ opacity: 1, scale: 1 }}
                 exit={{ opacity: 0, scale: 0.9 }}
-                className="flex items-center gap-2"
+                style={{ display: 'flex', alignItems: 'center', gap: '8px' }}
               >
                 <input
                   autoFocus
-                  className="text-2xl font-black text-center bg-transparent outline-none px-2 py-1 rounded-lg w-48 text-primary-var border border-[var(--accent)]"
+                  className="pet-rename-input"
                   value={tempName}
                   onChange={e => setTempName(e.target.value)}
                   onKeyDown={e => e.key === 'Enter' && handleSaveName()}
@@ -97,7 +89,7 @@ export default function PetPage() {
                 />
                 <button
                   onClick={handleSaveName}
-                  className="p-2 rounded-xl flex items-center justify-center bg-[var(--accent)] text-[var(--bg-primary)]"
+                  className="pet-rename-save-btn"
                 >
                   <Check size={16} />
                 </button>
@@ -109,13 +101,13 @@ export default function PetPage() {
                 animate={{ opacity: 1, scale: 1 }}
                 exit={{ opacity: 0, scale: 0.9 }}
                 onClick={() => setIsRenaming(true)}
-                className="relative flex items-center justify-center group"
+                className="pet-name-display-btn"
               >
-                <h2 className="text-3xl font-black tracking-tight px-6 text-primary-var">
+                <h2 className="pet-name-title">
                   {displayName}
                 </h2>
-                <div className="absolute right-0 opacity-0 group-hover:opacity-60 transition-opacity">
-                  <Pencil size={14} className="text-muted-var" />
+                <div className="pet-name-pencil-icon">
+                  <Pencil size={14} />
                 </div>
               </motion.button>
             )}
@@ -124,21 +116,19 @@ export default function PetPage() {
 
         {/* Pet type sub-label */}
         {activePet.custom_name && (
-          <p className="text-[11px] uppercase tracking-widest mb-6 text-muted-var">
+          <p className="pet-type-subtitle">
             {activePet.pet?.name}
           </p>
         )}
 
         {/* Pet Sprite */}
         <motion.div
-          className="relative"
+          className="pet-sprite-container"
           animate={{ y: [0, -12, 0] }}
           transition={{ repeat: Infinity, duration: 4, ease: 'easeInOut' }}
         >
           {/* Subtle under-glow */}
-          <div
-            className={`absolute bottom-0 left-1/2 -translate-x-1/2 w-32 h-8 rounded-full blur-xl opacity-30 ${glowBarClass}`}
-          />
+          <div className={`pet-under-glow ${statusState}`} />
 
           {PetComponent && <PetComponent health={health} />}
         </motion.div>
@@ -148,37 +138,34 @@ export default function PetPage() {
           key={Math.round(health / 10)}
           initial={{ opacity: 0, y: 5 }}
           animate={{ opacity: 1, y: 0 }}
-          className={`mt-3 mb-6 text-xs font-bold uppercase tracking-widest ${healthTextClass}`}
+          className={`pet-health-status ${statusState}`}
         >
           {health > 80 ? '✦ Thriving' : health > 60 ? 'Healthy' : health > 30 ? 'Needs attention' : '⚠ Critical'}
         </motion.p>
 
         {/* Health Bar */}
-        <div className="w-full space-y-2">
-          <div className="flex items-center justify-between px-1">
-            <span className="text-[10px] font-black uppercase tracking-widest flex items-center gap-1.5 text-muted-var">
-              <Heart size={11} className={healthTextClass} />
+        <div className="pet-health-bar-container">
+          <div className="pet-health-bar-header">
+            <span className="pet-health-bar-label">
+              <Heart size={11} className={statusState} fill={health > 30 ? 'currentColor' : 'none'} />
               Vitality
             </span>
-            <span className="text-xs font-mono font-black text-primary-var">{Math.round(health)}%</span>
+            <span className="pet-health-bar-percent">{Math.round(health)}%</span>
           </div>
 
-          <div className="h-3 w-full rounded-full overflow-hidden bg-elevated-var">
+          <div className="pet-health-bar-track">
             <motion.div
-              className={`h-full rounded-full relative overflow-hidden ${glowBarClass}`}
+              className={`pet-health-bar-fill ${statusState}`}
               initial={{ width: 0 }}
               animate={{ width: `${health}%` }}
               transition={{ duration: 1.2, ease: 'easeOut' }}
-            >
-              {/* Shine */}
-              <div className="absolute inset-0 bg-white/20 w-1/2 skew-x-12" />
-            </motion.div>
+            />
           </div>
 
           {/* Tick marks */}
-          <div className="flex justify-between px-0.5">
+          <div className="pet-health-bar-ticks">
             {[0, 25, 50, 75, 100].map(mark => (
-              <span key={mark} className="text-[8px] font-mono text-muted-var opacity-40">
+              <span key={mark} className="pet-health-bar-tick">
                 {mark}
               </span>
             ))}

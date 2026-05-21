@@ -7,7 +7,7 @@ import ShopPage from './components/shop/ShopPage';
 import StatsPage from './pages/StatsPage';
 import AuthPage from './pages/AuthPage';
 import PetPage from './pages/PetPage';
-import JournalPage from './pages/JournalPage';
+
 
 // ── Auth Guard ─────────────────────────────────────────────────────────────────
 function ProtectedRoutes() {
@@ -31,7 +31,7 @@ function ProtectedRoutes() {
     <Routes>
       <Route element={<DashboardLayout />}>
         <Route index element={<Dashboard />} />
-        <Route path="journal" element={<JournalPage />} />
+
         <Route path="shop" element={<ShopPage />} />
         <Route path="stats" element={<StatsPage />} />
         <Route path="pet" element={<PetPage />} />

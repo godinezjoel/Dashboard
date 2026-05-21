@@ -2,19 +2,20 @@ import { useMemo } from 'react';
 import { CheckCircle2, TrendingUp, Activity } from 'lucide-react';
 import { useGame } from '../../context/GameContext';
 import { motion } from 'framer-motion';
+import './AnalyticsPanel.css';
 
 const CAT_TEXT_CLASSES = {
-  work: 'text-[#60a5fa]',
-  health: 'text-[#4ade80]',
-  private: 'text-[#c084fc]',
-  general: 'text-muted-var',
+  work: 'cat-text-work',
+  health: 'cat-text-health',
+  private: 'cat-text-private',
+  general: 'cat-text-general',
 };
 
 const CAT_BAR_CLASSES = {
-  work: 'bg-[#60a5fa]',
-  health: 'bg-[#4ade80]',
-  private: 'bg-[#c084fc]',
-  general: 'bg-[var(--text-muted)]',
+  work: 'cat-bar-work',
+  health: 'cat-bar-health',
+  private: 'cat-bar-private',
+  general: 'cat-bar-general',
 };
 
 export default function AnalyticsPanel() {
@@ -84,59 +85,59 @@ export default function AnalyticsPanel() {
   }, [tasks]);
 
   return (
-    <div className="space-y-6">
+    <div className="analytics-container">
       
       {/* Quick Stats */}
-      <div className="p-5 rounded-2xl bg-surface-var border border-var">
-        <div className="flex items-center gap-2 mb-4 text-muted-var">
+      <div className="analytics-card">
+        <div className="analytics-card-header">
           <Activity size={14} />
-          <h3 className="text-xs font-bold uppercase tracking-wider">Velocity</h3>
+          <h3 className="analytics-card-title">Velocity</h3>
         </div>
         
-        <div className="grid grid-cols-2 gap-4">
-          <div>
-            <p className="text-[10px] uppercase font-bold tracking-wider mb-1 text-muted-var">Today</p>
-            <p className="text-2xl font-black text-primary-var">{stats.completedToday}</p>
+        <div className="analytics-stats-grid">
+          <div className="analytics-stat-item">
+            <p className="analytics-stat-label">Today</p>
+            <p className="analytics-stat-value">{stats.completedToday}</p>
           </div>
-          <div>
-            <p className="text-[10px] uppercase font-bold tracking-wider mb-1 text-muted-var">This Week</p>
-            <p className="text-2xl font-black text-primary-var">{stats.completedWeek}</p>
+          <div className="analytics-stat-item">
+            <p className="analytics-stat-label">This Week</p>
+            <p className="analytics-stat-value">{stats.completedWeek}</p>
           </div>
-          <div>
-            <p className="text-[10px] uppercase font-bold tracking-wider mb-1 text-muted-var">This Month</p>
-            <p className="text-xl font-bold text-primary-var">{stats.completedMonth}</p>
+          <div className="analytics-stat-item">
+            <p className="analytics-stat-label">This Month</p>
+            <p className="analytics-stat-value">{stats.completedMonth}</p>
           </div>
-          <div>
-            <p className="text-[10px] uppercase font-bold tracking-wider mb-1 text-muted-var">Open Tasks</p>
-            <p className="text-xl font-bold text-secondary-var">{stats.openTasksCount}</p>
+          <div className="analytics-stat-item">
+            <p className="analytics-stat-label">Open Tasks</p>
+            <p className="analytics-stat-value value-secondary">{stats.openTasksCount}</p>
           </div>
         </div>
       </div>
 
       {/* Category Progress */}
-      <div className="p-5 rounded-2xl bg-surface-var border border-var">
-        <div className="flex items-center gap-2 mb-5 text-muted-var">
+      <div className="analytics-card">
+        <div className="analytics-card-header">
           <CheckCircle2 size={14} />
-          <h3 className="text-xs font-bold uppercase tracking-wider">Completion Rates</h3>
+          <h3 className="analytics-card-title">Completion Rates</h3>
         </div>
 
-        <div className="space-y-4">
+        <div className="analytics-cat-list">
           {Object.entries(stats.catStats).map(([cat, data]) => {
             const pct = data.total === 0 ? 0 : Math.round((data.done / data.total) * 100);
             const categoryKey = CAT_TEXT_CLASSES[cat] ? cat : 'general';
             
             return (
               <div key={cat}>
-                <div className="flex items-center justify-between mb-1.5">
-                  <span className={`text-[10px] font-bold uppercase tracking-wider ${CAT_TEXT_CLASSES[categoryKey]}`}>{cat}</span>
-                  <span className="text-[10px] font-mono font-bold text-muted-var">{pct}%</span>
+                <div className="analytics-cat-text-row">
+                  <span className={`analytics-cat-label ${CAT_TEXT_CLASSES[categoryKey]}`}>{cat}</span>
+                  <span className="analytics-cat-percent">{pct}%</span>
                 </div>
-                <div className="h-1.5 w-full rounded-full overflow-hidden bg-elevated-var">
+                <div className="analytics-progress-container">
                   <motion.div 
                     initial={{ width: 0 }}
                     animate={{ width: `${pct}%` }}
                     transition={{ duration: 1, ease: 'easeOut' }}
-                    className={`h-full rounded-full ${CAT_BAR_CLASSES[categoryKey]}`}
+                    className={`analytics-progress-fill ${CAT_BAR_CLASSES[categoryKey]}`}
                   />
                 </div>
               </div>
@@ -146,38 +147,38 @@ export default function AnalyticsPanel() {
       </div>
 
       {/* XP Chart */}
-      <div className="p-5 rounded-2xl bg-surface-var border border-var">
-        <div className="flex items-center justify-between mb-6">
-          <div className="flex items-center gap-2 text-muted-var">
+      <div className="analytics-card">
+        <div className="analytics-card-header header-space-between">
+          <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
             <TrendingUp size={14} />
-            <h3 className="text-xs font-bold uppercase tracking-wider">XP Last 7 Days</h3>
+            <h3 className="analytics-card-title">XP Last 7 Days</h3>
           </div>
         </div>
 
-        <div className="h-32 flex items-end justify-between gap-1 relative">
-          {/* Subtle grid line */}
-          <div className="absolute top-0 left-0 w-full border-t border-dashed opacity-20 border-muted-var" />
-          <div className="absolute top-1/2 left-0 w-full border-t border-dashed opacity-20 border-muted-var" />
+        <div className="analytics-chart-container">
+          {/* Subtle grid lines */}
+          <div className="analytics-chart-gridline gridline-top" />
+          <div className="analytics-chart-gridline gridline-middle" />
           
           {stats.chartData.map((d, i) => (
-            <div key={i} className="flex-1 flex flex-col items-center gap-2 relative group">
+            <div key={i} className="analytics-chart-bar-column">
               {/* Tooltip */}
-              <div className="absolute -top-8 opacity-0 group-hover:opacity-100 transition-opacity text-[9px] font-bold px-1.5 py-0.5 rounded shadow-lg pointer-events-none bg-[var(--text-primary)] text-[var(--bg-primary)]">
+              <div className="analytics-tooltip">
                 {d.val} XP
               </div>
               
               {/* Bar */}
-              <div className="w-full relative flex items-end justify-center h-full rounded-t-sm bg-elevated-var">
+              <div className="analytics-bar-wrapper">
                 <motion.div
                   initial={{ height: 0 }}
                   animate={{ height: `${d.heightPct}%` }}
                   transition={{ duration: 0.8, delay: i * 0.1, ease: 'easeOut' }}
-                  className="w-full rounded-t-sm bg-[var(--accent)]"
+                  className="analytics-bar-fill"
                 />
               </div>
               
               {/* Label */}
-              <span className="text-[8px] font-bold uppercase tracking-wider text-muted-var">
+              <span className="analytics-chart-label">
                 {d.label}
               </span>
             </div>

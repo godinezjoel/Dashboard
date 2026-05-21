@@ -1,0 +1,135 @@
+.calendar-container {
+  padding: 16px;
+  border-radius: 16px;
+  margin-bottom: 24px;
+  background-color: var(--bg-surface);
+  border: 1px solid var(--border);
+}
+
+.calendar-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 16px;
+}
+
+.calendar-title {
+  font-size: 12px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--text-primary);
+}
+
+.calendar-nav-buttons {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.calendar-nav-btn {
+  padding: 4px;
+  border-radius: 6px;
+  border: none;
+  background: transparent;
+  cursor: pointer;
+  color: var(--text-muted);
+  transition: background-color 150ms ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.calendar-nav-btn:hover {
+  background-color: rgba(255, 255, 255, 0.05);
+}
+
+.calendar-grid {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 4px;
+}
+
+.calendar-day-header {
+  text-align: center;
+  font-size: 9px;
+  font-weight: 700;
+  text-transform: uppercase;
+  margin-bottom: 8px;
+  color: var(--text-muted);
+}
+
+.calendar-day-offset {
+  height: 28px;
+}
+
+.calendar-day-btn {
+  position: relative;
+  height: 28px;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  border-radius: 8px;
+  font-size: 12px;
+  transition: all 150ms ease;
+  border: 1px solid transparent;
+  cursor: pointer;
+  background: transparent;
+  color: var(--text-muted);
+}
+
+.calendar-day-btn:hover {
+  background-color: rgba(255, 255, 255, 0.05);
+}
+
+.calendar-day-btn.today {
+  color: var(--text-primary);
+  font-weight: 700;
+  border-color: var(--border);
+}
+
+.calendar-day-btn.selected {
+  background-color: var(--accent);
+  color: var(--bg-primary) !important;
+  font-weight: 700;
+  border-color: var(--accent);
+}
+
+.calendar-day-number {
+  margin-bottom: 4px;
+}
+
+.day-dots {
+  position: absolute;
+  bottom: 4px;
+  display: flex;
+  gap: 2px;
+}
+
+.day-dot {
+  width: 4px;
+  height: 4px;
+  border-radius: 50%;
+}
+
+.day-dot.work {
+  background-color: #60a5fa;
+}
+
+.day-dot.health {
+  background-color: #4ade80;
+}
+
+.day-dot.private {
+  background-color: #c084fc;
+}
+
+.day-dot.general {
+  background-color: var(--text-muted);
+}
+
+.day-dot.selected-dot {
+  background-color: var(--bg-primary);
+}

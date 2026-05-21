@@ -4,6 +4,7 @@ import { useGame } from '../../context/GameContext';
 import { ChevronsUp, Equal, ChevronDown, Calendar, AlignLeft, CheckSquare, GripVertical } from 'lucide-react';
 import { CATEGORY_STYLES } from '../tasks/TaskList';
 import TaskDetailModal from './TaskDetailModal';
+import './tasks.css';
 
 const PRIORITY_ICONS = {
   high:   <ChevronsUp size={13} color="#ef4444" />,
@@ -12,9 +13,9 @@ const PRIORITY_ICONS = {
 };
 
 const COLUMNS = [
-  { id: 'open',        label: 'Open',        colorClass: 'text-muted-var',  dotClass: 'bg-[var(--text-muted)]', accentClass: 'bg-transparent' },
-  { id: 'in_progress', label: 'In Progress', colorClass: 'text-amber-500',  dotClass: 'bg-amber-500', accentClass: 'bg-amber-500/20' },
-  { id: 'done',        label: 'Done',        colorClass: 'text-green-500',  dotClass: 'bg-green-500', accentClass: 'bg-green-500/20' },
+  { id: 'open',        label: 'Open',        status: 'open' },
+  { id: 'in_progress', label: 'In Progress', status: 'in_progress' },
+  { id: 'done',        label: 'Done',        status: 'done' },
 ];
 
 function KanbanCard({ task, onDragStart, onDoubleClick }) {
@@ -51,22 +52,21 @@ function KanbanCard({ task, onDragStart, onDoubleClick }) {
       animate={{ opacity: 1, y: 0 }}
       exit={{ opacity: 0, scale: 0.95 }}
       onDoubleClick={handleDoubleClick}
-      className="group rounded-xl p-3 bg-card-var border border-var cursor-grab select-none transition-colors"
+      className="kanban-card"
       whileHover={{ boxShadow: '0 0 0 1px rgba(139,92,246,0.3)' }}
       whileTap={{ cursor: 'grabbing' }}
     >
       {/* Top row: priority + drag handle + category */}
-      <div className="flex items-center justify-between mb-2">
-        <span
-          className={`text-[9px] font-bold uppercase px-2 py-0.5 rounded-full ${catStyle}`}
-        >
+      <div className="kanban-card-top-row">
+        <span className={`category-badge ${catStyle}`}>
           {task.category || 'general'}
         </span>
-        <div className="flex items-center gap-1">
+        <div className="kanban-card-action-group">
           {/* Drag handle icon */}
           <div
-            className="p-0.5 rounded opacity-30 group-hover:opacity-70 transition-opacity"
+            className="kanban-card-grip"
             title="Drag to move"
+            data-grip
           >
             <GripVertical size={13} className="text-muted-var" />
           </div>
@@ -75,27 +75,27 @@ function KanbanCard({ task, onDragStart, onDoubleClick }) {
       </div>
 
       {/* Title */}
-      <p className="text-xs font-semibold leading-snug mb-2.5 text-primary-var">
+      <p className="kanban-card-title">
         {task.title}
       </p>
 
       {/* Metadata row */}
-      <div className="flex items-center gap-3 flex-wrap">
+      <div className="kanban-card-meta">
         {task.due_date && (
-          <span className="flex items-center gap-1 text-[9px] text-muted-var">
+          <span className="kanban-card-meta-item">
             <Calendar size={9} />
             {new Date(task.due_date).toLocaleDateString(undefined, { month: 'short', day: 'numeric' })}
           </span>
         )}
         {hasSubtasks && (
-          <div className="flex items-center gap-1.5">
-            <span className="flex items-center gap-1 text-[9px] text-muted-var">
+          <div className="kanban-card-meta-item">
+            <span className="flex items-center gap-1">
               <CheckSquare size={9} />
               {completedSubtasks}/{task.subtasks.length}
             </span>
-            <div className="w-10 h-1 rounded-full overflow-hidden bg-elevated-var">
+            <div className="kanban-card-progress-bg">
               <motion.div
-                className="h-full rounded-full bg-[var(--accent)]"
+                className="kanban-card-progress-bar"
                 animate={{ width: `${(completedSubtasks / task.subtasks.length) * 100}%` }}
                 transition={{ duration: 0.3, ease: 'easeOut' }}
               />
@@ -103,7 +103,7 @@ function KanbanCard({ task, onDragStart, onDoubleClick }) {
           </div>
         )}
         {task.notes && (
-          <span className="flex items-center gap-1 text-[9px] text-muted-var">
+          <span className="kanban-card-meta-item">
             <AlignLeft size={9} />
             Note
           </span>
@@ -117,42 +117,34 @@ function KanbanCard({ task, onDragStart, onDoubleClick }) {
 function KanbanColumn({ column, tasks, onDrop, onDragOver, onDragLeave, isDragOver, onDoubleClick }) {
   return (
     <div
-      className={`flex flex-col rounded-2xl overflow-hidden bg-surface-var border min-h-[500px] transition-colors ${
-        isDragOver ? column.dotClass.replace('bg-', 'border-') : 'border-var'
-      }`}
+      className={`kanban-column status-${column.status} ${isDragOver ? 'drag-over' : ''}`}
       onDragOver={onDragOver}
       onDrop={onDrop}
       onDragLeave={onDragLeave}
     >
       {/* Column header */}
-      <div
-        className={`px-4 py-3 flex items-center justify-between border-b border-var transition-colors ${
-          isDragOver ? column.accentClass : 'bg-transparent'
-        }`}
-      >
-        <div className="flex items-center gap-2">
-          <div className={`w-2 h-2 rounded-full ${column.dotClass}`} />
-          <span className={`text-xs font-bold uppercase tracking-widest ${column.colorClass}`}>
+      <div className={`kanban-column-header header-${column.status} ${isDragOver ? 'drag-over' : ''}`}>
+        <div className="kanban-column-title-group">
+          <div className={`kanban-column-dot dot-${column.status}`} />
+          <span className={`kanban-column-label label-${column.status}`}>
             {column.label}
           </span>
         </div>
-        <span
-          className="text-xs font-black min-w-[22px] h-[22px] flex items-center justify-center rounded-full bg-elevated-var text-muted-var"
-        >
+        <span className="kanban-column-count">
           {tasks.length}
         </span>
       </div>
 
       {/* Cards */}
-      <div className="flex-1 p-3 space-y-2 overflow-y-auto min-h-0">
+      <div className="kanban-cards-body">
         <AnimatePresence mode="popLayout">
           {tasks.length === 0 && (
             <motion.div
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
-              className="flex items-center justify-center h-24 rounded-xl border border-dashed border-var"
+              className="kanban-empty-placeholder"
             >
-              <p className="text-[10px] text-muted-var">Drop tasks here</p>
+              <p>Drop tasks here</p>
             </motion.div>
           )}
           {tasks.map(task => (
@@ -216,7 +208,7 @@ export default function KanbanBoard() {
 
   return (
     <>
-      <div className="grid grid-cols-3 gap-4">
+      <div className="kanban-grid">
         {COLUMNS.map(col => (
           <KanbanColumn
             key={col.id}

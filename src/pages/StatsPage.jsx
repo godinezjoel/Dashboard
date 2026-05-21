@@ -2,6 +2,7 @@ import { motion } from 'framer-motion';
 import { useGame } from '../context/GameContext';
 import { calculateLevelPercent, xpToNextLevel, calculateCurrentHealth } from '../lib/gameLogic';
 import { BarChart2, Zap, CheckSquare, Heart, Trophy, Star, Coins } from 'lucide-react';
+import './StatsPage.css';
 
 export default function StatsPage() {
   const { profile, tasks, activePet } = useGame();
@@ -23,10 +24,10 @@ export default function StatsPage() {
   ];
 
   return (
-    <div className="p-6">
-      <div className="mb-6">
-        <h2 className="text-xl font-bold flex items-center gap-2 text-primary-var">
-          <BarChart2 size={20} className="text-accent-var" />
+    <div className="stats-page-container">
+      <div className="stats-header">
+        <h2 className="stats-title">
+          <BarChart2 size={20} className="stats-title-icon" />
           Stats
         </h2>
       </div>
@@ -35,30 +36,30 @@ export default function StatsPage() {
       <motion.div
         initial={{ opacity: 0, y: 8 }}
         animate={{ opacity: 1, y: 0 }}
-        className="card p-5 mb-4 shadow-[0_0_24px_var(--accent-glow)]"
+        className="card level-card-custom"
       >
-        <div className="flex items-center gap-4 mb-4">
-          <div className="w-16 h-16 rounded-2xl flex items-center justify-center text-2xl font-bold flex-shrink-0 bg-[var(--accent)] text-[var(--bg-primary)]">
+        <div className="level-info-row">
+          <div className="level-badge">
             {profile.level}
           </div>
-          <div>
-            <p className="text-xs text-muted-var">Current Level</p>
-            <p className="text-2xl font-bold text-primary-var">
+          <div className="level-text-column">
+            <p className="level-label">Current Level</p>
+            <p className="level-title">
               Level {profile.level}
             </p>
-            <p className="text-xs text-accent-var">
+            <p className="level-xp-left">
               {xpLeft} XP to next level
             </p>
           </div>
         </div>
         <div>
-          <div className="flex justify-between text-xs mb-1 text-muted-var">
+          <div className="xp-progress-row">
             <span>{profile.xp % 100} / 100 XP</span>
             <span>{levelPct}%</span>
           </div>
-          <div className="h-3 rounded-full overflow-hidden bg-surface-var">
+          <div className="progress-bar-container">
             <motion.div
-              className="h-full rounded-full bg-[var(--accent)]"
+              className="progress-bar-fill"
               initial={{ width: 0 }}
               animate={{ width: `${levelPct}%` }}
               transition={{ duration: 0.8, ease: 'easeOut' }}
@@ -68,24 +69,24 @@ export default function StatsPage() {
       </motion.div>
 
       {/* Stats grid */}
-      <div className="grid grid-cols-2 gap-3 mb-4">
+      <div className="stats-grid">
         {[
-          { label: 'Total XP', value: profile.xp, icon: <Zap size={24} strokeWidth={1.5} />, color: 'text-neutral-300' },
-          { label: 'Coins', value: profile.coins, icon: <Coins size={24} strokeWidth={1.5} />, color: 'text-neutral-300' },
-          { label: 'Tasks Done', value: totalDone, icon: <CheckSquare size={24} strokeWidth={1.5} />, color: 'text-neutral-300' },
-          { label: 'Pet Health', value: `${Math.round(health)}%`, icon: <Heart size={24} strokeWidth={1.5} />, color: health < 30 ? 'text-red-400' : 'text-neutral-300' },
+          { label: 'Total XP', value: profile.xp, icon: <Zap size={24} strokeWidth={1.5} />, isLow: false },
+          { label: 'Coins', value: profile.coins, icon: <Coins size={24} strokeWidth={1.5} />, isLow: false },
+          { label: 'Tasks Done', value: totalDone, icon: <CheckSquare size={24} strokeWidth={1.5} />, isLow: false },
+          { label: 'Pet Health', value: `${Math.round(health)}%`, icon: <Heart size={24} strokeWidth={1.5} />, isLow: health < 30 },
         ].map((s, i) => (
           <motion.div
             key={s.label}
             initial={{ opacity: 0, y: 8 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.1 + i * 0.05 }}
-            className="card p-4 flex items-center gap-3"
+            className="card stats-card"
           >
-            <span className="text-2xl">{s.icon}</span>
-            <div>
-              <p className={`text-xl font-bold ${s.color}`}>{s.value}</p>
-              <p className="text-xs text-muted-var">{s.label}</p>
+            <span className="stats-card-icon">{s.icon}</span>
+            <div className="stats-card-text">
+              <p className={`stats-card-value ${s.isLow ? 'stats-value-low' : ''}`}>{s.value}</p>
+              <p className="stats-card-label">{s.label}</p>
             </div>
           </motion.div>
         ))}
@@ -93,28 +94,24 @@ export default function StatsPage() {
 
       {/* Milestones */}
       <div>
-        <h3 className="text-sm font-semibold mb-3 flex items-center gap-2 text-secondary-var">
+        <h3 className="milestones-title">
           <Trophy size={14} />
           Milestones
         </h3>
-        <div className="grid grid-cols-3 gap-2">
+        <div className="milestones-grid">
           {milestones.map((m, i) => (
             <motion.div
               key={m.label}
               initial={{ opacity: 0, scale: 0.9 }}
               animate={{ opacity: 1, scale: 1 }}
               transition={{ delay: 0.2 + i * 0.04 }}
-              className={`card p-3 text-center transition-all ${
-                m.reached
-                  ? 'border-[var(--accent-glow)] shadow-[0_0_12px_var(--accent-subtle)]'
-                  : 'opacity-40'
-              }`}
+              className={`card milestone-card ${m.reached ? 'reached' : ''}`}
             >
-              <span className="text-2xl block mb-1">{m.icon}</span>
-              <p className={`text-[10px] font-medium ${m.reached ? 'text-accent-var' : 'text-muted-var'}`}>
+              <span className="milestone-icon">{m.icon}</span>
+              <p className="milestone-label">
                 {m.label}
               </p>
-              {m.reached && <span className="text-[8px] text-emerald-400">✓ Reached</span>}
+              {m.reached && <span className="milestone-reached-check">✓ Reached</span>}
             </motion.div>
           ))}
         </div>

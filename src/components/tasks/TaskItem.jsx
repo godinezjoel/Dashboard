@@ -3,7 +3,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { Trash2, Zap, Coins, PartyPopper, Edit2, Check, Calendar, AlignLeft, CheckSquare, ChevronsUp, Equal, ChevronDown } from 'lucide-react';
 import { useGame } from '../../context/GameContext';
 import TaskDetailModal from './TaskDetailModal';
-
+import './tasks.css';
 
 export default function TaskItem({ task }) {
   const { completeTask, updateTask, deleteTask } = useGame();
@@ -71,35 +71,27 @@ export default function TaskItem({ task }) {
   };
 
   const CATEGORY_STYLES = {
-    work: 'bg-[rgba(59,130,246,0.15)] text-[#60a5fa] border border-[rgba(59,130,246,0.3)]',
-    health: 'bg-[rgba(34,197,94,0.15)] text-[#4ade80] border border-[rgba(34,197,94,0.3)]',
-    private: 'bg-[rgba(168,85,247,0.15)] text-[#c084fc] border border-[rgba(168,85,247,0.3)]',
-    general: 'bg-elevated-var text-muted-var border border-var'
+    work: 'category-work',
+    health: 'category-health',
+    private: 'category-private',
+    general: 'category-general'
   };
 
   const catStyle = CATEGORY_STYLES[task.category || 'general'] || CATEGORY_STYLES.general;
 
   return (
-    <div className="relative">
+    <div className="task-item-wrapper">
       <div
         onClick={handleCardClick}
-        className={`flex items-center gap-3 px-4 py-3.5 rounded-xl mb-2 transition-all duration-200 cursor-pointer ${
-          isVisuallyDone ? 'opacity-50 border-var' : 'hover:border-accent/30'
-        } ${
-          task.status === 'in_progress' && !isVisuallyDone
-            ? 'border-[var(--accent)]'
-            : 'border-var'
-        } bg-card-var border`}
+        className={`task-item-card ${isVisuallyDone ? 'is-done' : ''} ${
+          task.status === 'in_progress' && !isVisuallyDone ? 'in-progress' : ''
+        }`}
       >
         {/* Checkbox */}
         <button
           onClick={handleComplete}
           disabled={isVisuallyDone || completing}
-          className={`flex-shrink-0 w-5 h-5 rounded-md border-2 flex items-center justify-center transition-all duration-200 ${
-            isVisuallyDone
-              ? 'border-[var(--accent)] bg-[var(--accent)]'
-              : 'border-[var(--text-muted)] bg-transparent'
-          }`}
+          className={`task-checkbox ${isVisuallyDone ? 'checked' : ''}`}
           id={`task-check-${task.id}`}
           aria-label={isVisuallyDone ? 'Completed' : 'Mark as done'}
         >
@@ -128,82 +120,78 @@ export default function TaskItem({ task }) {
 
         {/* Priority Icon */}
         {!isVisuallyDone && (
-          <div className="flex-shrink-0 flex items-center justify-center w-4 h-4" title={task.priority || 'medium'}>
+          <div className="task-item-priority-icon" title={task.priority || 'medium'}>
             {PRIORITY_ICONS[task.priority || 'medium']}
           </div>
         )}
 
         {/* Category badge */}
         {!isVisuallyDone && (
-          <span
-            className={`text-[8px] px-1.5 py-0.5 rounded-md flex-shrink-0 uppercase tracking-widest font-bold ${catStyle}`}
-          >
+          <span className={`category-badge ${catStyle}`}>
             {task.category || 'general'}
           </span>
         )}
 
         {/* Title & Details */}
         {isEditing ? (
-          <div className="flex-1 flex items-center gap-2">
+          <div className="task-item-edit-container">
             <input
               type="text"
               value={editTitle}
               onChange={(e) => setEditTitle(e.target.value)}
               onKeyDown={handleKeyDown}
               autoFocus
-              className="flex-1 text-sm bg-transparent outline-none px-1 py-0.5 rounded-md text-primary-var border border-[var(--accent)]"
+              className="task-item-edit-input"
             />
-            <button onClick={handleSaveEdit} className="p-1 rounded-md text-green-500 hover:bg-white/5 transition-colors">
+            <button onClick={handleSaveEdit} className="task-item-save-btn">
               <Check size={14} />
             </button>
           </div>
         ) : (
-          <div className="flex-1 flex flex-col justify-center min-w-0">
+          <div className="task-item-details">
             <span
               onDoubleClick={() => !isVisuallyDone && setIsEditing(true)}
-              className={`text-sm truncate transition-all duration-200 ${
-                isVisuallyDone ? 'line-through text-muted-var' : 'text-primary-var'
-              }`}
+              className={`task-item-title ${isVisuallyDone ? 'title-done' : ''}`}
             >
               {task.title}
             </span>
             
             {/* Detail Indicators */}
             {!isVisuallyDone && (task.due_date || task.notes || hasSubtasks || task.status === 'in_progress') && (
-              <div className="flex items-center gap-3 mt-1.5 overflow-hidden">
+              <div className="task-item-indicators">
                 {task.status === 'in_progress' && (
-                  <span className="text-[9px] font-bold uppercase tracking-wider text-amber-500 flex items-center gap-1">
-                    <span className="w-1.5 h-1.5 rounded-full bg-amber-500 animate-pulse" />
+                  <span className="task-item-status-tag">
+                    <span className="task-item-status-dot animate-pulse-dot" />
                     In Progress
                   </span>
                 )}
                 
                 {task.due_date && (
-                  <span className="flex items-center gap-1 text-[10px] text-secondary-var">
+                  <span className="task-item-indicator indicator-date">
                     <Calendar size={10} />
                     {new Date(task.due_date).toLocaleDateString(undefined, { month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' })}
                   </span>
                 )}
                 
                 {hasSubtasks && (
-                  <div className="flex items-center gap-2">
-                    <span className="flex items-center gap-1 text-[10px] text-muted-var">
+                  <div className="task-item-indicator">
+                    <span className="task-item-indicator indicator-subtasks">
                       <CheckSquare size={10} />
                       {completedSubtasksCount}/{task.subtasks.length}
                     </span>
-                    <div className="h-1.5 w-16 rounded-full overflow-hidden bg-elevated-var">
+                    <div className="task-subtasks-progress-bg">
                       <motion.div 
                         initial={{ width: 0 }}
                         animate={{ width: `${(completedSubtasksCount / task.subtasks.length) * 100}%` }}
                         transition={{ duration: 0.5, ease: 'easeOut' }}
-                        className="h-full rounded-full bg-[var(--accent)]"
+                        className="task-subtasks-progress-bar"
                       />
                     </div>
                   </div>
                 )}
                 
                 {task.notes && (
-                  <span className="flex items-center gap-1 text-[10px] text-muted-var">
+                  <span className="task-item-indicator indicator-notes">
                     <AlignLeft size={10} />
                   </span>
                 )}
@@ -212,23 +200,19 @@ export default function TaskItem({ task }) {
           </div>
         )}
 
-
-
-
-
         {/* Edit & Delete buttons */}
         {!isVisuallyDone && !isEditing && (
-          <div className="flex items-center gap-1 flex-shrink-0">
+          <div className="task-item-actions">
             <button
               onClick={() => setIsEditing(true)}
-              className="p-1.5 rounded-lg transition-colors text-muted-var icon-btn-muted"
+              className="task-item-action-btn btn-edit"
               aria-label="Edit task"
             >
               <Edit2 size={13} />
             </button>
             <button
               onClick={handleDelete}
-              className="p-1.5 rounded-lg transition-colors text-muted-var icon-btn-danger"
+              className="task-item-action-btn btn-delete"
               aria-label="Delete task"
             >
               <Trash2 size={13} />
@@ -239,7 +223,7 @@ export default function TaskItem({ task }) {
         {isVisuallyDone && (
           <button
             onClick={handleDelete}
-            className="flex-shrink-0 p-1.5 rounded-lg transition-colors text-muted-var icon-btn-danger"
+            className="task-item-action-btn btn-delete"
             aria-label="Delete task"
           >
             <Trash2 size={13} />
@@ -258,16 +242,16 @@ export default function TaskItem({ task }) {
               scale: [0.5, 1.2, 1, 0.8] 
             }}
             transition={{ duration: 1.5, times: [0, 0.15, 0.8, 1], ease: 'easeOut' }}
-            className="absolute left-1/2 -translate-x-1/2 top-0 pointer-events-none whitespace-nowrap z-50 flex flex-col items-center gap-1.5"
+            className="task-reward-pop"
           >
-            <span className="text-[10px] font-black uppercase tracking-widest px-2.5 py-0.5 rounded-full shadow-lg bg-[var(--accent)] text-[var(--bg-primary)]">
+            <span className="task-reward-title">
               Completed!
             </span>
-            <div className="flex items-center gap-2 px-3 py-1.5 rounded-full shadow-2xl backdrop-blur-md bg-white/10 border border-[var(--accent-glow)]">
-              <span className="flex items-center gap-1 text-xs font-bold text-amber-300">
+            <div className="task-reward-badge-container">
+              <span className="task-reward-xp">
                 <Zap size={12} fill="currentColor" /> +{showReward.xp}
               </span>
-              <span className="flex items-center gap-1 text-xs font-bold text-amber-500">
+              <span className="task-reward-coins">
                 <Coins size={12} fill="currentColor" /> +{showReward.coins}
               </span>
             </div>

@@ -3,6 +3,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { ShoppingBag, Lock, Egg, Dog, Cat, Bird, Rabbit, Ghost, Coins, RefreshCw } from 'lucide-react';
 import { useGame } from '../../context/GameContext';
 import toast from 'react-hot-toast';
+import './ShopPage.css';
 
 const PET_ICONS = {
   'Eggling': Egg,
@@ -55,17 +56,17 @@ export default function ShopPage() {
   }
 
   return (
-    <div className="p-6">
+    <div className="shop-container">
       {/* Header */}
-      <div className="mb-6">
-        <h2 className="text-xl font-bold mb-1 flex items-center gap-2 text-primary-var">
+      <div className="shop-header">
+        <h2 className="shop-title">
           <ShoppingBag size={20} />
           Pet Shop
         </h2>
-        <p className="text-sm flex items-center gap-2 text-muted-var">
+        <p className="shop-subtitle">
           Choose your companion
           {profile && (
-            <span className="flex items-center gap-1 font-semibold text-secondary-var">
+            <span className="shop-coins-counter">
               <Coins size={13} /> {profile.coins}
             </span>
           )}
@@ -78,7 +79,7 @@ export default function ShopPage() {
           initial={{ opacity: 0, y: 8 }}
           animate={{ opacity: 1, y: 0 }}
           exit={{ opacity: 0, y: -8 }}
-          className="grid grid-cols-2 gap-3 sm:grid-cols-3"
+          className="shop-grid"
         >
           {allPets.map((pet) => {
             const PetIcon = PET_ICONS[pet.name] || Ghost;
@@ -94,34 +95,34 @@ export default function ShopPage() {
               <motion.div
                 key={pet.id}
                 whileHover={{ y: -2 }}
-                className="card p-4 flex flex-col items-center text-center gap-3 relative overflow-hidden"
+                className="card shop-card"
               >
                 {/* Pet icon */}
-                <div className="mt-2 text-neutral-400">
+                <div className="shop-card-icon-wrapper">
                   <PetIcon size={40} strokeWidth={1} />
                 </div>
 
                 <div>
-                  <p className="text-sm font-semibold text-primary-var">
+                  <p className="shop-card-title">
                     {pet.name}
                   </p>
-                  <p className="text-[10px] mt-0.5 leading-relaxed text-muted-var">
+                  <p className="shop-card-desc">
                     {pet.description}
                   </p>
                 </div>
 
                 {/* Price tag for unowned pets */}
                 {!owned && pet.price_coins > 0 && (
-                  <p className={`text-xs font-semibold flex items-center gap-1 ${canAfford ? 'text-secondary-var' : 'text-red-400'}`}>
+                  <p className={`shop-card-price ${canAfford ? '' : 'price-locked'}`}>
                     <Coins size={11} /> {pet.price_coins}
                   </p>
                 )}
 
                 {/* Action */}
-                <div className="w-full mt-auto">
+                <div className="shop-card-action">
                   {owned ? (
                     <button
-                      className="w-full btn-ghost text-xs py-1.5 flex items-center justify-center gap-1"
+                      className="btn-ghost shop-btn-switch"
                       onClick={() => handleSelectPet(pet)}
                       disabled={isLoading}
                       id={`switch-pet-${pet.id}`}
@@ -131,7 +132,7 @@ export default function ShopPage() {
                     </button>
                   ) : canAfford ? (
                     <button
-                      className="w-full btn-primary text-xs py-1.5"
+                      className="btn-primary shop-btn-buy"
                       onClick={() => handleSelectPet(pet)}
                       disabled={isLoading}
                       id={`buy-pet-${pet.id}`}
@@ -139,7 +140,7 @@ export default function ShopPage() {
                       {isLoading ? '...' : 'Buy & Activate'}
                     </button>
                   ) : (
-                    <div className="flex items-center justify-center gap-1 text-xs text-muted-var">
+                    <div className="shop-btn-locked">
                       <Lock size={11} /> Need {pet.price_coins}
                     </div>
                   )}

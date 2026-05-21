@@ -3,12 +3,13 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { Plus, ChevronRight, CheckCircle2, Filter, ArrowUpDown, X, ChevronsUp, Equal, ChevronDown } from 'lucide-react';
 import { useGame } from '../../context/GameContext';
 import TaskItem from './TaskItem';
+import './tasks.css';
 
 export const CATEGORY_STYLES = {
-  work: { background: 'rgba(59, 130, 246, 0.15)', color: '#60a5fa', border: '1px solid rgba(59, 130, 246, 0.3)' },
-  health: { background: 'rgba(34, 197, 94, 0.15)', color: '#4ade80', border: '1px solid rgba(34, 197, 94, 0.3)' },
-  private: { background: 'rgba(168, 85, 247, 0.15)', color: '#c084fc', border: '1px solid rgba(168, 85, 247, 0.3)' },
-  general: { background: 'var(--bg-elevated)', color: 'var(--text-muted)', border: '1px solid var(--border)' }
+  work: 'category-work',
+  health: 'category-health',
+  private: 'category-private',
+  general: 'category-general'
 };
 
 export const CATEGORIES = [
@@ -37,7 +38,6 @@ export default function TaskList({ selectedDate, onClearDate }) {
 
   const [filterCat, setFilterCat] = useState(() => localStorage.getItem('lifeos_filterCat') || 'all');
   const [sortBy, setSortBy]       = useState(() => localStorage.getItem('lifeos_sortBy') || 'created');
-  const [showDone, setShowDone]   = useState(false);
 
   useEffect(() => {
     localStorage.setItem('lifeos_filterCat', filterCat);
@@ -46,7 +46,6 @@ export default function TaskList({ selectedDate, onClearDate }) {
   useEffect(() => {
     localStorage.setItem('lifeos_sortBy', sortBy);
   }, [sortBy]);
-
 
   const openTasks = useMemo(() => {
     let list = tasks.filter((t) => !t.is_done);
@@ -62,21 +61,19 @@ export default function TaskList({ selectedDate, onClearDate }) {
     return list;
   }, [tasks, filterCat, sortBy, selectedDate]);
 
-  const doneTasks = tasks.filter((t) => t.is_done);
-
   if (loading) {
     return (
-      <div className="p-6 space-y-3">
-        {[...Array(3)].map((_, i) => <div key={i} className="skeleton h-14 w-full" />)}
+      <div className="task-list-container" style={{ padding: '24px', gap: '12px' }}>
+        {[...Array(3)].map((_, i) => <div key={i} className="skeleton" style={{ height: '56px', width: '100%' }} />)}
       </div>
     );
   }
 
   return (
-    <div className="space-y-6">
+    <div className="task-list-container">
 
       {/* ══ FILTER + SORT BAR ══════════════════════════════════ */}
-      <div className="pt-4 mt-6 border-t border-var">
+      <div className="task-list-filter-bar">
         {/* Date Filter Badge */}
         <AnimatePresence>
           {selectedDate && (
@@ -84,14 +81,14 @@ export default function TaskList({ selectedDate, onClearDate }) {
               initial={{ opacity: 0, y: -10 }}
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, y: -10 }}
-              className="flex items-center justify-between px-4 py-2.5 rounded-xl mb-4 bg-[var(--accent)] text-[var(--bg-primary)]"
+              className="task-date-filter-badge"
             >
-              <span className="text-xs font-bold uppercase tracking-wider">
+              <span className="task-date-filter-text">
                 Showing tasks for: {selectedDate.toLocaleDateString(undefined, { weekday: 'long', month: 'long', day: 'numeric' })}
               </span>
               <button 
                 onClick={onClearDate}
-                className="p-1 rounded-md hover:bg-black/20 transition-colors"
+                className="task-date-filter-close"
                 title="Clear date filter"
               >
                 <X size={14} />
@@ -100,22 +97,22 @@ export default function TaskList({ selectedDate, onClearDate }) {
           )}
         </AnimatePresence>
 
-        <div className="flex items-center justify-between mb-3">
-          <div className="flex items-center gap-1.5 text-muted-var">
+        <div className="task-list-meta-row">
+          <div className="task-list-label-group">
             <Filter size={12} />
-            <span className="text-[10px] font-bold uppercase tracking-wider">Filter Tasks</span>
+            <span className="task-list-label-text">Filter Tasks</span>
           </div>
 
           {/* Sort */}
-          <div className="flex items-center gap-1.5 text-muted-var">
+          <div className="task-list-sort-select">
             <ArrowUpDown size={11} />
             <select
               value={sortBy}
               onChange={(e) => setSortBy(e.target.value)}
-              className="text-xs bg-transparent outline-none cursor-pointer text-muted-var"
+              className="task-list-sort-dropdown"
             >
               {SORT_OPTIONS.map((o) => (
-                <option key={o.value} value={o.value} className="bg-zinc-950 text-muted-var">
+                <option key={o.value} value={o.value}>
                   {o.label}
                 </option>
               ))}
@@ -124,20 +121,16 @@ export default function TaskList({ selectedDate, onClearDate }) {
         </div>
 
         {/* Category filter chips */}
-        <div className="flex gap-1.5 flex-wrap">
+        <div className="task-list-cat-chips">
           {[{ value: 'all', label: 'All' }, ...CATEGORIES].map((c) => (
             <button
               key={c.value}
               onClick={() => setFilterCat(c.value === filterCat && c.value !== 'all' ? 'all' : c.value)}
-              className={`px-2.5 py-1 text-xs rounded-lg transition-all border ${
-                filterCat === c.value
-                  ? 'bg-elevated-var text-primary-var border-[var(--text-muted)]'
-                  : 'bg-transparent text-muted-var border-var'
-              }`}
+              className={`task-list-chip ${filterCat === c.value ? 'active' : ''}`}
             >
               {c.label}
               {c.value !== 'all' && (
-                <span className="ml-1 opacity-50">
+                <span className="task-list-chip-count">
                   {tasks.filter(t => !t.is_done && (t.category ?? 'general') === c.value).length || ''}
                 </span>
               )}
@@ -154,10 +147,10 @@ export default function TaskList({ selectedDate, onClearDate }) {
               key="empty"
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
-              className="text-center py-10"
+              className="task-list-empty"
             >
-              <CheckCircle2 size={28} className="mx-auto mb-2 text-[var(--border)]" />
-              <p className="text-sm text-muted-var">
+              <CheckCircle2 size={28} className="task-list-empty-icon" />
+              <p className="task-list-empty-text">
                 {filterCat === 'all' ? 'No open tasks.' : `No open ${filterCat} tasks.`}
               </p>
             </motion.div>
@@ -176,8 +169,6 @@ export default function TaskList({ selectedDate, onClearDate }) {
             ))
           )}
         </AnimatePresence>
-
-
       </div>
     </div>
   );

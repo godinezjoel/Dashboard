@@ -1,0 +1,127 @@
+.shop-container {
+  padding: 24px;
+}
+
+.shop-header {
+  margin-bottom: 24px;
+}
+
+.shop-title {
+  font-size: 20px;
+  font-weight: 700;
+  margin-bottom: 4px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: var(--text-primary);
+}
+
+.shop-subtitle {
+  font-size: 14px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: var(--text-muted);
+}
+
+.shop-coins-counter {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  font-weight: 600;
+  color: var(--text-secondary);
+}
+
+/* Shop Grid */
+.shop-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 12px;
+}
+
+@media (min-width: 640px) {
+  .shop-grid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+.shop-card {
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  gap: 12px;
+  position: relative;
+  overflow: hidden;
+}
+
+.shop-card-icon-wrapper {
+  margin-top: 8px;
+  color: var(--text-muted);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: color 200ms ease;
+}
+
+.shop-card:hover .shop-card-icon-wrapper {
+  color: var(--accent);
+}
+
+.shop-card-title {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--text-primary);
+}
+
+.shop-card-desc {
+  font-size: 10px;
+  margin-top: 2px;
+  line-height: 1.4;
+  color: var(--text-muted);
+}
+
+.shop-card-price {
+  font-size: 12px;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  color: var(--text-secondary);
+}
+
+.shop-card-price.price-locked {
+  color: #f87171; /* red-400 equivalent */
+}
+
+.shop-card-action {
+  width: 100%;
+  margin-top: auto;
+}
+
+/* Switch & Buy buttons mapped to system button elements */
+.shop-btn-switch {
+  width: 100%;
+  font-size: 12px;
+  padding: 6px 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+}
+
+.shop-btn-buy {
+  width: 100%;
+  font-size: 12px;
+  padding: 6px 0;
+}
+
+.shop-btn-locked {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+  font-size: 12px;
+  color: var(--text-muted);
+}

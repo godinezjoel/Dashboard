@@ -7,6 +7,7 @@ import MiniCalendar from '../components/layout/MiniCalendar';
 import AnalyticsPanel from '../components/analytics/AnalyticsPanel';
 import AddTaskModal from '../components/tasks/AddTaskModal';
 import { LayoutList, Kanban, Clock, CheckCircle2, Trash2, Plus } from 'lucide-react';
+import './Dashboard.css';
 
 const VIEW_KEY = 'dashboard_view';
 
@@ -24,7 +25,7 @@ function formatTime(isoString) {
 
 function ViewToggle({ view, setView }) {
   return (
-    <div className="flex items-center gap-0.5 p-0.5 rounded-xl bg-surface-var border border-var">
+    <div className="view-toggle-bar">
       {[
         { id: 'list',  icon: LayoutList, label: 'List'  },
         { id: 'board', icon: Kanban,     label: 'Board' },
@@ -32,19 +33,17 @@ function ViewToggle({ view, setView }) {
         <button
           key={id}
           onClick={() => setView(id)}
-          className={`relative flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold transition-colors ${
-            view === id ? 'text-primary-var' : 'text-muted-var'
-          }`}
+          className={`view-toggle-btn ${view === id ? 'active' : ''}`}
         >
           {view === id && (
-              <motion.div
-                layoutId="view-pill"
-                className="absolute inset-0 rounded-lg bg-elevated-var"
-                transition={{ type: 'spring', bounce: 0.2, duration: 0.35 }}
-              />
+            <motion.div
+              layoutId="view-pill"
+              className="view-toggle-pill"
+              transition={{ type: 'spring', bounce: 0.2, duration: 0.35 }}
+            />
           )}
-          <Icon size={13} className="relative z-10" />
-          <span className="relative z-10">{label}</span>
+          <Icon size={13} style={{ position: 'relative', zIndex: 10 }} />
+          <span style={{ position: 'relative', zIndex: 10 }}>{label}</span>
         </button>
       ))}
     </div>
@@ -69,18 +68,18 @@ export default function Dashboard() {
     .slice(0, 10);
 
   const RightColumn = (
-    <div className="sticky top-6">
+    <div className="dashboard-sidebar-column">
       <MiniCalendar selectedDate={selectedDate} onSelectDate={setSelectedDate} />
 
-      <div className="mb-4 flex items-center justify-between mt-8">
-        <div className="flex items-center gap-2 text-muted-var">
+      <div className="column-header-row">
+        <div className="column-header-title">
           <Clock size={13} />
-          <span className="text-[10px] font-bold uppercase tracking-wider">History</span>
+          <span>History</span>
         </div>
         {doneTasks.length > 0 && (
           <button
             onClick={clearCompletedTasks}
-            className="flex items-center gap-1.5 px-2 py-1 rounded-md text-[10px] font-bold uppercase tracking-wider transition-colors text-muted-var icon-btn-danger"
+            className="clear-history-btn"
           >
             <Trash2 size={11} />
             Clear
@@ -89,26 +88,26 @@ export default function Dashboard() {
       </div>
 
       {doneTasks.length === 0 ? (
-        <p className="text-xs text-center py-6 text-muted-var border border-dashed border-var rounded-xl">
+        <p className="history-empty">
           No history yet.
         </p>
       ) : (
-        <div className="space-y-1.5 max-h-[calc(100vh-420px)] overflow-y-auto pr-1 thin-scrollbar">
+        <div className="history-list thin-scrollbar">
           {doneTasks.map((task, i) => (
             <motion.div
               key={task.id}
               initial={{ opacity: 0, x: 10 }}
               animate={{ opacity: 1, x: 0 }}
               transition={{ delay: i * 0.02 }}
-              className="flex items-center gap-2 px-3 py-2 rounded-xl bg-surface-var border border-var"
+              className="history-item"
             >
-              <CheckCircle2 size={12} className="text-muted-var shrink-0" />
-              <span className="flex-1 text-[11px] line-through truncate text-muted-var" title={task.title}>
+              <CheckCircle2 size={12} style={{ color: 'var(--text-muted)', flexShrink: 0 }} />
+              <span className="history-item-title" title={task.title}>
                 {task.title}
               </span>
-              <div className="text-right flex-shrink-0">
-                <p className="text-[9px] font-mono text-muted-var">{formatDate(task.completed_at)}</p>
-                <p className="text-[9px] font-mono text-muted-var opacity-60">{formatTime(task.completed_at)}</p>
+              <div className="history-time-col">
+                <p className="history-time-text">{formatDate(task.completed_at)}</p>
+                <p className="history-time-text history-time-text-sub">{formatTime(task.completed_at)}</p>
               </div>
             </motion.div>
           ))}
@@ -118,17 +117,17 @@ export default function Dashboard() {
   );
 
   return (
-    <div className="min-h-screen bg-primary-var">
+    <div className="dashboard-page">
 
       {/* View toggle header */}
-      <div className="flex items-center justify-end px-6 pt-6 pb-2">
+      <div className="dashboard-view-header">
         <ViewToggle view={view} setView={setView} />
       </div>
 
       {/* LIST VIEW */}
       {view === 'list' && (
-        <div className="grid grid-cols-1 lg:grid-cols-[280px_1fr_280px] gap-8 items-start pt-2 px-6 pb-12">
-          <div className="sticky top-6">
+        <div className="dashboard-list-grid">
+          <div className="dashboard-sidebar-column">
             <AnalyticsPanel />
           </div>
           <div>
@@ -140,7 +139,7 @@ export default function Dashboard() {
 
       {/* BOARD VIEW */}
       {view === 'board' && (
-        <div className="grid grid-cols-1 lg:grid-cols-[1fr_280px] gap-8 items-start pt-2 px-6 pb-12">
+        <div className="dashboard-board-grid">
           <div>
             <KanbanBoard />
           </div>
@@ -151,7 +150,7 @@ export default function Dashboard() {
       {/* Floating Action Button */}
       <button
         onClick={() => setIsModalOpen(true)}
-        className="fixed bottom-8 right-8 z-40 w-14 h-14 rounded-full shadow-2xl flex items-center justify-center transition-all hover:scale-105 active:scale-95 bg-[var(--accent)] text-white shadow-[0_4px_20px_var(--accent-glow)]"
+        className="floating-add-btn"
       >
         <Plus size={28} />
       </button>

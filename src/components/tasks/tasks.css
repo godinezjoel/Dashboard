@@ -1,0 +1,1101 @@
+/* Shared tasks stylesheet for List, Kanban Board, Add Task, and Detail Modal */
+
+/* Categories & Priorities styling */
+.category-badge {
+  font-size: 8px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  padding: 2px 6px;
+  border-radius: 4px;
+}
+
+.category-badge.category-work,
+.category-btn.category-work {
+  background: rgba(59, 130, 246, 0.15);
+  color: #60a5fa;
+  border: 1px solid rgba(59, 130, 246, 0.3);
+}
+
+.category-badge.category-health,
+.category-btn.category-health {
+  background: rgba(34, 197, 94, 0.15);
+  color: #4ade80;
+  border: 1px solid rgba(34, 197, 94, 0.3);
+}
+
+.category-badge.category-private,
+.category-btn.category-private {
+  background: rgba(168, 85, 247, 0.15);
+  color: #c084fc;
+  border: 1px solid rgba(168, 85, 247, 0.3);
+}
+
+.category-badge.category-general,
+.category-btn.category-general {
+  background: var(--bg-elevated);
+  color: var(--text-muted);
+  border: 1px solid var(--border);
+}
+
+.category-btn {
+  padding: 4px 12px;
+  font-size: 12px;
+  border-radius: 8px;
+  transition: all 150ms ease;
+  cursor: pointer;
+  opacity: 0.4;
+  border: 1px solid transparent;
+}
+
+.category-btn:hover {
+  opacity: 0.8;
+}
+
+.category-btn.active {
+  opacity: 1;
+  box-shadow: inset 0 0 0 1px currentColor;
+}
+
+/* Modal Backdrops & Containers */
+.task-modal-backdrop {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 50;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 16px;
+  backdrop-filter: blur(4px);
+  -webkit-backdrop-filter: blur(4px);
+  background-color: rgba(0, 0, 0, 0.6);
+}
+
+.task-modal-content {
+  width: 100%;
+  max-width: 448px; /* max-w-md */
+  border-radius: 16px;
+  padding: 24px;
+  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+  background-color: var(--bg-card);
+  border: 1px solid var(--border);
+}
+
+.task-modal-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 20px;
+}
+
+.task-modal-title {
+  font-size: 14px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--text-primary);
+}
+
+.task-modal-close-btn {
+  padding: 4px;
+  border: none;
+  background: transparent;
+  border-radius: 6px;
+  cursor: pointer;
+  color: var(--text-muted);
+  transition: color 150ms ease, background-color 150ms ease;
+}
+
+.task-modal-close-btn:hover {
+  background-color: var(--bg-elevated);
+  color: var(--text-primary);
+}
+
+.task-modal-form {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.task-modal-section {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.task-modal-section-title {
+  display: block;
+  font-size: 10px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  margin-bottom: 8px;
+  color: var(--text-muted);
+}
+
+.task-modal-chips-row {
+  display: flex;
+  gap: 6px;
+  flex-wrap: wrap;
+}
+
+/* Priority buttons in modal */
+.priority-btn {
+  padding: 6px 12px;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 12px;
+  color: var(--text-primary);
+  background: transparent;
+  transition: all 150ms ease;
+  cursor: pointer;
+  opacity: 0.5;
+  border: 1px solid transparent;
+}
+
+.priority-btn:hover {
+  opacity: 0.8;
+}
+
+.priority-btn.active {
+  background-color: var(--bg-elevated);
+  border-color: var(--border);
+  opacity: 1;
+}
+
+/* ── Task List Page Styling ─────────────────────────────────────────────────── */
+.task-list-container {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.task-list-filter-bar {
+  padding-top: 16px;
+  margin-top: 24px;
+  border-top: 1px solid var(--border);
+}
+
+.task-date-filter-badge {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px 16px;
+  border-radius: 12px;
+  margin-bottom: 16px;
+  background-color: var(--accent);
+  color: var(--bg-primary);
+}
+
+.task-date-filter-text {
+  font-size: 12px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.task-date-filter-close {
+  padding: 4px;
+  border: none;
+  background: transparent;
+  border-radius: 6px;
+  cursor: pointer;
+  color: inherit;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.task-date-filter-close:hover {
+  background-color: rgba(0, 0, 0, 0.2);
+}
+
+.task-list-meta-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 12px;
+}
+
+.task-list-label-group {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  color: var(--text-muted);
+}
+
+.task-list-label-text {
+  font-size: 10px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.task-list-sort-select {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  color: var(--text-muted);
+}
+
+.task-list-sort-dropdown {
+  font-size: 12px;
+  background: transparent;
+  border: none;
+  outline: none;
+  cursor: pointer;
+  color: var(--text-muted);
+}
+
+.task-list-cat-chips {
+  display: flex;
+  gap: 6px;
+  flex-wrap: wrap;
+}
+
+.task-list-chip {
+  padding: 4px 10px;
+  font-size: 12px;
+  border-radius: 8px;
+  border: 1px solid var(--border);
+  background: transparent;
+  color: var(--text-muted);
+  transition: all 150ms ease;
+  cursor: pointer;
+}
+
+.task-list-chip.active {
+  background-color: var(--bg-elevated);
+  color: var(--text-primary);
+  border-color: var(--text-muted);
+}
+
+.task-list-chip-count {
+  margin-left: 4px;
+  opacity: 0.5;
+}
+
+.task-list-empty {
+  text-align: center;
+  padding: 40px 0;
+}
+
+.task-list-empty-icon {
+  margin: 0 auto 8px;
+  color: var(--border);
+}
+
+.task-list-empty-text {
+  font-size: 14px;
+  color: var(--text-muted);
+}
+
+/* ── Task Item Styling ──────────────────────────────────────────────────────── */
+.task-item-card {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 14px 16px;
+  border-radius: 12px;
+  margin-bottom: 8px;
+  transition: all 200ms ease;
+  cursor: pointer;
+  background-color: var(--bg-surface);
+  border: 1px solid var(--border);
+}
+
+.task-item-card:hover {
+  border-color: rgba(139, 92, 246, 0.3);
+}
+
+.task-item-card.is-done {
+  opacity: 0.5;
+}
+
+.task-item-card.in-progress {
+  border-color: var(--accent);
+}
+
+.task-checkbox {
+  flex-shrink: 0;
+  width: 20px;
+  height: 20px;
+  border-radius: 6px;
+  border: 2px solid var(--text-muted);
+  background: transparent;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 200ms ease;
+  cursor: pointer;
+}
+
+.task-checkbox.checked {
+  border-color: var(--accent);
+  background-color: var(--accent);
+}
+
+.task-item-priority-icon {
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 16px;
+  height: 16px;
+}
+
+.task-item-details {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  min-width: 0;
+}
+
+.task-item-title {
+  font-size: 14px;
+  color: var(--text-primary);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  transition: all 200ms ease;
+}
+
+.task-item-title.title-done {
+  text-decoration: line-through;
+  color: var(--text-muted);
+}
+
+.task-item-edit-input {
+  flex: 1;
+  font-size: 14px;
+  background: transparent;
+  outline: none;
+  padding: 2px 4px;
+  border-radius: 6px;
+  color: var(--text-primary);
+  border: 1px solid var(--accent);
+}
+
+.task-item-indicators {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-top: 6px;
+  overflow: hidden;
+}
+
+.task-item-status-tag {
+  font-size: 9px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: #f59e0b; /* amber-500 */
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.task-item-status-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background-color: #f59e0b;
+}
+
+.task-item-indicator {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 10px;
+}
+
+.task-item-indicator.indicator-date {
+  color: var(--text-secondary);
+}
+
+.task-item-indicator.indicator-subtasks,
+.task-item-indicator.indicator-notes {
+  color: var(--text-muted);
+}
+
+.task-subtasks-progress-bg {
+  height: 6px;
+  width: 64px;
+  border-radius: 9999px;
+  overflow: hidden;
+  background-color: var(--bg-elevated);
+}
+
+.task-subtasks-progress-bar {
+  height: 100%;
+  border-radius: 9999px;
+  background-color: var(--accent);
+}
+
+.task-item-actions {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  flex-shrink: 0;
+}
+
+.task-item-action-btn {
+  padding: 6px;
+  border-radius: 8px;
+  border: none;
+  background: transparent;
+  cursor: pointer;
+  color: var(--text-muted);
+  transition: all 150ms ease;
+}
+
+.task-item-action-btn:hover {
+  background-color: var(--bg-elevated);
+}
+
+.task-item-action-btn.btn-delete:hover {
+  color: #ef4444; /* red-500 equivalent */
+}
+
+/* Floating rewards pops */
+.task-reward-pop {
+  position: absolute;
+  left: 50%;
+  top: 0;
+  transform: translateX(-50%);
+  pointer-events: none;
+  white-space: nowrap;
+  z-index: 50;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+}
+
+.task-reward-title {
+  font-size: 10px;
+  font-weight: 900;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  padding: 2px 10px;
+  border-radius: 9999px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
+  background-color: var(--accent);
+  color: var(--bg-primary);
+}
+
+.task-reward-badge-container {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 12px;
+  border-radius: 9999px;
+  box-shadow: 0 10px 25px rgba(0,0,0,0.5);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  background-color: rgba(255, 255, 255, 0.1);
+  border: 1px solid var(--accent-glow);
+}
+
+.task-reward-xp {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 12px;
+  font-weight: 700;
+  color: #fcd34d; /* amber-300 */
+}
+
+.task-reward-coins {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 12px;
+  font-weight: 700;
+  color: #f59e0b; /* amber-500 */
+}
+
+/* ── Kanban Board Styling ───────────────────────────────────────────────────── */
+.kanban-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 16px;
+}
+
+.kanban-column {
+  display: flex;
+  flex-direction: column;
+  border-radius: 16px;
+  overflow: hidden;
+  background-color: var(--bg-surface);
+  border: 1px solid var(--border);
+  min-height: 500px;
+  transition: border-color 200ms ease, background-color 200ms ease;
+}
+
+.kanban-column-header {
+  padding: 12px 16px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border-b: 1px solid var(--border);
+  background: transparent;
+  transition: background-color 200ms ease;
+}
+
+.kanban-column-title-group {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.kanban-column-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+}
+
+.kanban-column-label {
+  font-size: 12px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+}
+
+.kanban-column-count {
+  font-size: 12px;
+  font-weight: 900;
+  min-width: 22px;
+  height: 22px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  background-color: var(--bg-elevated);
+  color: var(--text-muted);
+}
+
+.kanban-cards-body {
+  flex: 1;
+  padding: 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  overflow-y: auto;
+  min-height: 0;
+}
+
+.kanban-empty-placeholder {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 96px;
+  border-radius: 12px;
+  border: 1px dashed var(--border);
+}
+
+.kanban-empty-placeholder p {
+  font-size: 10px;
+  color: var(--text-muted);
+}
+
+.kanban-card {
+  padding: 12px;
+  border-radius: 12px;
+  background-color: var(--bg-card);
+  border: 1px solid var(--border);
+  cursor: grab;
+  user-select: none;
+  transition: background-color 150ms ease, border-color 150ms ease;
+}
+
+.kanban-card:active {
+  cursor: grabbing;
+}
+
+.kanban-card-top-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 8px;
+}
+
+.kanban-card-action-group {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.kanban-card-grip {
+  padding: 2px;
+  border-radius: 4px;
+  opacity: 0.3;
+  transition: opacity 150ms ease;
+}
+
+.kanban-card:hover .kanban-card-grip {
+  opacity: 0.7;
+}
+
+.kanban-card-title {
+  font-size: 12px;
+  font-weight: 600;
+  line-height: 1.4;
+  margin-bottom: 10px;
+  color: var(--text-primary);
+}
+
+.kanban-card-meta {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.kanban-card-meta-item {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 9px;
+  color: var(--text-muted);
+}
+
+.kanban-card-progress-bg {
+  width: 40px;
+  height: 4px;
+  border-radius: 9999px;
+  overflow: hidden;
+  background-color: var(--bg-elevated);
+}
+
+.kanban-card-progress-bar {
+  height: 100%;
+  border-radius: 9999px;
+  background-color: var(--accent);
+}
+
+/* ── Task Detail Modal Styling ─────────────────────────────────────────────── */
+.task-detail-modal-wrapper {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 50;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 16px;
+  pointer-events: none;
+}
+
+.task-detail-modal-container {
+  width: 100%;
+  max-width: 512px; /* max-w-lg */
+  border-radius: 16px;
+  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+  display: flex;
+  flex-direction: column;
+  pointer-events: auto;
+  max-height: 90vh;
+  overflow: hidden;
+  background-color: var(--bg-surface);
+  border: 1px solid var(--border);
+}
+
+.task-detail-modal-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 20px;
+  border-bottom: 1px solid var(--border);
+}
+
+.task-detail-title-input {
+  font-size: 18px;
+  font-weight: 700;
+  background: transparent;
+  border: none;
+  outline: none;
+  flex: 1;
+  color: var(--text-primary);
+}
+
+.task-detail-body {
+  padding: 20px;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.task-detail-meta-grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 16px;
+}
+
+.task-detail-meta-field {
+  flex: 1;
+  min-width: 140px;
+}
+
+.task-detail-meta-field.field-wide {
+  min-width: 180px;
+}
+
+.task-detail-select,
+.task-detail-input {
+  width: 100%;
+  font-size: 14px;
+  padding: 8px;
+  border-radius: 8px;
+  outline: none;
+  background-color: var(--bg-elevated);
+  border: 1px solid var(--border);
+  color: var(--text-primary);
+}
+
+.task-detail-select {
+  cursor: pointer;
+}
+
+.task-detail-textarea {
+  width: 100%;
+  font-size: 14px;
+  padding: 12px;
+  border-radius: 8px;
+  outline: none;
+  min-height: 100px;
+  resize: vertical;
+  background-color: var(--bg-elevated);
+  border: 1px solid var(--border);
+  color: var(--text-primary);
+}
+
+/* Subtasks section */
+.subtasks-header-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 8px;
+}
+
+.subtasks-title-label {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 10px;
+  font-weight: 700;
+  text-transform: uppercase;
+  color: var(--text-muted);
+}
+
+.subtasks-fraction {
+  font-size: 10px;
+  font-family: monospace;
+  font-weight: 700;
+  color: var(--text-secondary);
+}
+
+.subtask-list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-bottom: 12px;
+}
+
+.subtask-row {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+}
+
+.subtask-checkbox {
+  margin-top: 2px;
+  flex-shrink: 0;
+  width: 16px;
+  height: 16px;
+  border-radius: 4px;
+  border: 1px solid var(--text-muted);
+  background: transparent;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 150ms ease;
+}
+
+.subtask-checkbox.checked {
+  border-color: var(--accent);
+  background-color: var(--accent);
+}
+
+.subtask-title-text {
+  flex: 1;
+  font-size: 14px;
+  color: var(--text-primary);
+}
+
+.subtask-title-text.is-done {
+  text-decoration: line-through;
+  opacity: 0.5;
+}
+
+.subtask-delete-btn {
+  padding: 4px;
+  border: none;
+  background: transparent;
+  cursor: pointer;
+  color: var(--text-muted);
+  transition: color 150ms ease;
+}
+
+.subtask-delete-btn:hover {
+  color: #ef4444; /* red-500 */
+}
+
+.subtask-add-form {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.subtask-add-input {
+  flex: 1;
+  font-size: 14px;
+  padding: 8px;
+  border-radius: 8px;
+  outline: none;
+  background-color: var(--bg-elevated);
+  border: 1px solid var(--border);
+  color: var(--text-primary);
+}
+
+.subtask-add-btn {
+  padding: 8px;
+  border-radius: 8px;
+  border: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: var(--accent);
+  color: var(--bg-primary);
+  cursor: pointer;
+  transition: opacity 150ms ease;
+}
+
+.subtask-add-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+/* Detail Modal Footer */
+.task-detail-footer {
+  padding: 20px;
+  border-top: 1px solid var(--border);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.task-detail-reward-summary {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.task-detail-reward-item {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 10px;
+  font-family: monospace;
+  font-weight: 700;
+}
+
+.task-detail-reward-item.reward-xp {
+  color: var(--text-secondary);
+}
+
+.task-detail-reward-item.reward-coins {
+  color: var(--text-muted);
+}
+
+.task-detail-footer-actions {
+  display: flex;
+  gap: 12px;
+}
+
+.task-detail-footer-btn {
+  padding: 8px 16px;
+  font-size: 14px;
+  font-weight: 700;
+  border-radius: 12px;
+  cursor: pointer;
+}
+
+.task-detail-footer-btn.btn-primary {
+  background-color: var(--accent);
+  color: var(--bg-primary);
+  border: none;
+  transition: opacity 150ms ease;
+}
+
+.task-detail-footer-btn.btn-primary:hover {
+  opacity: 0.9;
+}
+
+.task-detail-footer-btn.btn-primary:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.task-detail-footer-btn.btn-ghost {
+  background: transparent;
+  border: 1px solid var(--border);
+  color: var(--text-muted);
+  transition: all 150ms ease;
+}
+
+.task-detail-footer-btn.btn-ghost:hover {
+  background-color: var(--bg-elevated);
+  color: var(--text-primary);
+}
+
+/* Kanban column states */
+.kanban-column.status-open {
+  border-color: var(--border);
+}
+
+.kanban-column.status-in_progress {
+  border-color: rgba(245, 158, 11, 0.2);
+}
+
+.kanban-column.status-done {
+  border-color: rgba(16, 185, 129, 0.2);
+}
+
+.kanban-column-dot.dot-open {
+  background-color: var(--text-muted);
+}
+
+.kanban-column-dot.dot-in_progress {
+  background-color: #f59e0b;
+}
+
+.kanban-column-dot.dot-done {
+  background-color: #10b981;
+}
+
+.kanban-column-label.label-open {
+  color: var(--text-muted);
+}
+
+.kanban-column-label.label-in_progress {
+  color: #f59e0b;
+}
+
+.kanban-column-label.label-done {
+  color: #10b981;
+}
+
+/* Column dragover highlights */
+.kanban-column.status-open.drag-over {
+  border-color: var(--text-muted);
+}
+
+.kanban-column.status-in_progress.drag-over {
+  border-color: #f59e0b;
+}
+
+.kanban-column.status-done.drag-over {
+  border-color: #10b981;
+}
+
+.kanban-column-header.header-open.drag-over {
+  background-color: var(--bg-elevated);
+}
+
+.kanban-column-header.header-in_progress.drag-over {
+  background-color: rgba(245, 158, 11, 0.1);
+}
+
+.kanban-column-header.header-done.drag-over {
+  background-color: rgba(16, 185, 129, 0.1);
+}
+
+/* Extra utility helpers for task widgets */
+.task-item-wrapper {
+  position: relative;
+}
+
+.task-item-edit-container {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex: 1;
+}
+
+.task-item-save-btn {
+  padding: 4px;
+  border-radius: 6px;
+  border: none;
+  background: transparent;
+  cursor: pointer;
+  color: #10b981;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background-color 150ms ease;
+}
+
+.task-item-save-btn:hover {
+  background-color: rgba(16, 185, 129, 0.1);
+}
+
+.animate-pulse-dot {
+  animation: task-pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+}
+
+@keyframes task-pulse {
+  0%, 100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: .5;
+  }
+}
+
+/* Modal submit / generic button */
+.task-submit-btn {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 12px;
+  font-size: 14px;
+  font-weight: 700;
+  border-radius: 12px;
+  border: none;
+  cursor: pointer;
+  background-color: var(--accent);
+  color: var(--bg-primary);
+  transition: opacity 150ms ease;
+}
+
+.task-submit-btn:hover {
+  opacity: 0.9;
+}
+
+.task-submit-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}

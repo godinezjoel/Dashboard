@@ -1,0 +1,199 @@
+.stats-page-container {
+  padding: 24px;
+}
+
+.stats-header {
+  margin-bottom: 24px;
+}
+
+.stats-title {
+  font-size: 20px;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: var(--text-primary);
+}
+
+.stats-title-icon {
+  color: var(--accent);
+}
+
+/* Level Card */
+.level-card-custom {
+  padding: 20px;
+  margin-bottom: 16px;
+  box-shadow: 0 0 24px var(--accent-glow);
+}
+
+.level-info-row {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  margin-bottom: 16px;
+}
+
+.level-badge {
+  width: 64px;
+  height: 64px;
+  border-radius: 16px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 24px;
+  font-weight: 700;
+  flex-shrink: 0;
+  background-color: var(--accent);
+  color: var(--bg-primary);
+}
+
+.level-text-column {
+  display: flex;
+  flex-direction: column;
+}
+
+.level-label {
+  font-size: 12px;
+  color: var(--text-muted);
+}
+
+.level-title {
+  font-size: 24px;
+  font-weight: 700;
+  color: var(--text-primary);
+  line-height: 1.2;
+  margin: 2px 0;
+}
+
+.level-xp-left {
+  font-size: 12px;
+  color: var(--accent);
+  font-weight: 500;
+}
+
+.xp-progress-row {
+  display: flex;
+  justify-content: space-between;
+  font-size: 12px;
+  margin-bottom: 4px;
+  color: var(--text-muted);
+}
+
+.progress-bar-container {
+  height: 12px;
+  border-radius: 9999px;
+  overflow: hidden;
+  background-color: var(--bg-surface);
+  border: 1px solid var(--border);
+}
+
+.progress-bar-fill {
+  height: 100%;
+  border-radius: 9999px;
+  background-color: var(--accent);
+}
+
+/* Stats Grid */
+.stats-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 12px;
+  margin-bottom: 16px;
+}
+
+.stats-card {
+  padding: 16px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.stats-card-icon {
+  font-size: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--accent);
+}
+
+.stats-card-text {
+  display: flex;
+  flex-direction: column;
+}
+
+.stats-card-value {
+  font-size: 20px;
+  font-weight: 700;
+  color: var(--text-primary);
+}
+
+.stats-card-value.stats-value-low {
+  color: #f87171; /* red-400 equivalent */
+}
+
+.stats-card-label {
+  font-size: 12px;
+  color: var(--text-muted);
+}
+
+/* Milestones */
+.milestones-title {
+  font-size: 14px;
+  font-weight: 600;
+  margin-bottom: 12px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: var(--text-secondary);
+}
+
+.milestones-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 8px;
+}
+
+.milestone-card {
+  padding: 12px;
+  text-align: center;
+  transition: all 200ms ease;
+  opacity: 0.4;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.milestone-card.reached {
+  opacity: 1;
+  border-color: var(--accent-glow);
+  box-shadow: 0 0 12px var(--accent-subtle);
+}
+
+.milestone-icon {
+  font-size: 24px;
+  display: block;
+  margin-bottom: 4px;
+  color: var(--text-muted);
+}
+
+.milestone-card.reached .milestone-icon {
+  color: var(--accent);
+}
+
+.milestone-label {
+  font-size: 10px;
+  font-weight: 500;
+  color: var(--text-muted);
+  margin-bottom: 2px;
+}
+
+.milestone-card.reached .milestone-label {
+  color: var(--accent);
+}
+
+.milestone-reached-check {
+  font-size: 8px;
+  color: #34d399; /* emerald-400 */
+  font-weight: 600;
+}

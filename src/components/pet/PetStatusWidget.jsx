@@ -1,6 +1,7 @@
 import { motion, AnimatePresence } from 'framer-motion';
 import { useGame } from '../../context/GameContext';
 import { getPetHealthState, getHealthBarColor, calculateLevelPercent } from '../../lib/gameLogic';
+import './PetStatusWidget.css';
 
 const HEALTH_ANIMATIONS = {
   healthy: 'animate-pet-float',
@@ -17,10 +18,17 @@ const HEALTH_LABELS = {
 };
 
 const HEALTH_LABEL_COLORS = {
-  healthy: 'text-emerald-400',
-  normal: 'text-yellow-400',
-  low: 'text-amber-500',
-  critical: 'text-red-400',
+  healthy: 'color-healthy',
+  normal: 'color-normal',
+  low: 'color-low',
+  critical: 'color-critical',
+};
+
+const HEALTH_BAR_CLASSES = {
+  'bg-red-500': 'bar-critical',
+  'bg-amber-500': 'bar-low',
+  'bg-emerald-500': 'bar-healthy',
+  'bg-yellow-400': 'bar-normal',
 };
 
 export default function PetStatusWidget() {
@@ -39,58 +47,50 @@ export default function PetStatusWidget() {
       initial={{ opacity: 0, y: -12, scale: 0.95 }}
       animate={{ opacity: 1, y: 0, scale: 1 }}
       transition={{ type: 'spring', stiffness: 300, damping: 24 }}
-      className="fixed top-4 right-4 z-50 w-56 select-none"
+      className="pet-widget-container"
     >
-      <div className={`card p-3 backdrop-blur-md bg-[rgba(26,27,46,0.85)] shadow-[0_8px_32px_rgba(0,0,0,0.4)] ${
-        healthState === 'critical'
-          ? 'border-red-500/50 shadow-[0_0_24px_rgba(239,68,68,0.25),0_8px_32px_rgba(0,0,0,0.4)]'
-          : ''
-      }`}>
+      <div className={`card pet-widget-card ${healthState === 'critical' ? 'state-critical' : ''}`}>
         {/* Pet + Info */}
-        <div className="flex items-center gap-3 mb-2.5">
+        <div className="pet-widget-header">
           {/* Pet sprite */}
-          <div className="relative flex-shrink-0">
+          <div className="pet-widget-avatar-container">
             <span
-              className={`pet-emoji text-3xl ${HEALTH_ANIMATIONS[healthState]}`}
+              className={`pet-sprite-icon ${HEALTH_ANIMATIONS[healthState]}`}
             >
               {petEmoji}
             </span>
             {healthState === 'critical' && (
-              <span className="absolute -top-1 -right-1 text-xs animate-pulse">🆘</span>
+              <span className="pet-widget-critical-badge">🆘</span>
             )}
           </div>
 
           {/* Name + Level */}
-          <div className="flex-1 min-w-0">
-            <div className="flex items-center justify-between gap-1">
-              <span
-                className="text-xs font-semibold truncate text-primary-var"
-              >
+          <div className="pet-widget-info">
+            <div className="pet-widget-name-row">
+              <span className="pet-widget-name">
                 {petName}
               </span>
-              <span className="badge text-[10px] flex-shrink-0">
+              <span className="pet-widget-level-badge">
                 Lv.{profile.level}
               </span>
             </div>
-            <span className={`text-[10px] font-medium ${HEALTH_LABEL_COLORS[healthState]}`}>
+            <span className={`pet-widget-status-label ${HEALTH_LABEL_COLORS[healthState]}`}>
               {HEALTH_LABELS[healthState]}
             </span>
           </div>
         </div>
 
         {/* Health Bar */}
-        <div className="mb-2">
-          <div className="flex justify-between mb-1">
-            <span className="text-[10px] text-muted-var">HP</span>
-            <span className={`text-[10px] font-mono font-medium ${
-              healthState === 'critical' ? 'text-red-400' : 'text-emerald-400'
-            }`}>
+        <div className="pet-widget-section">
+          <div className="pet-widget-section-header">
+            <span className="pet-widget-section-label">HP</span>
+            <span className={`pet-widget-section-value ${healthState === 'critical' ? 'color-critical' : 'color-healthy'}`}>
               {Math.round(health)}%
             </span>
           </div>
-          <div className="h-1.5 rounded-full overflow-hidden bg-surface-var">
+          <div className="pet-widget-progress-container">
             <motion.div
-              className={`h-full rounded-full ${barColor}`}
+              className={`pet-widget-progress-fill ${HEALTH_BAR_CLASSES[barColor] || 'bar-normal'}`}
               initial={{ width: 0 }}
               animate={{ width: `${health}%` }}
               transition={{ duration: 0.6, ease: 'easeOut' }}
@@ -99,16 +99,16 @@ export default function PetStatusWidget() {
         </div>
 
         {/* XP Bar */}
-        <div>
-          <div className="flex justify-between mb-1">
-            <span className="text-[10px] text-muted-var">XP</span>
-            <span className="text-[10px] font-mono text-accent-var">
+        <div className="pet-widget-section xp-section">
+          <div className="pet-widget-section-header">
+            <span className="pet-widget-section-label">XP</span>
+            <span className="pet-widget-section-value" style={{ color: 'var(--accent)' }}>
               {profile.xp} total
             </span>
           </div>
-          <div className="h-1 rounded-full overflow-hidden bg-surface-var">
+          <div className="pet-widget-progress-container xp-container">
             <motion.div
-              className="h-full rounded-full bg-violet-500"
+              className="pet-widget-progress-fill bar-xp"
               initial={{ width: 0 }}
               animate={{ width: `${levelPct}%` }}
               transition={{ duration: 0.6, ease: 'easeOut', delay: 0.1 }}
@@ -117,9 +117,9 @@ export default function PetStatusWidget() {
         </div>
 
         {/* Coins */}
-        <div className="mt-2.5 flex items-center justify-between pt-2 border-t border-var">
-          <span className="text-[10px] text-muted-var">Coins</span>
-          <span className="text-xs font-semibold text-amber-400 flex items-center gap-1">
+        <div className="pet-widget-coins-row">
+          <span className="pet-widget-coins-label">Coins</span>
+          <span className="pet-widget-coins-value">
             <span>🪙</span>
             {profile.coins.toLocaleString()}
           </span>

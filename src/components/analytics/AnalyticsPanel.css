@@ -1,0 +1,219 @@
+.analytics-container {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.analytics-card {
+  padding: 20px;
+  border-radius: 16px;
+  background-color: var(--bg-surface);
+  border: 1px solid var(--border);
+}
+
+.analytics-card-header {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 16px;
+  color: var(--text-muted);
+}
+
+.analytics-card-header.header-space-between {
+  justify-content: space-between;
+  margin-bottom: 24px;
+}
+
+.analytics-card-title {
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+/* Quick Stats Grid */
+.analytics-stats-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 16px;
+}
+
+.analytics-stat-item {
+  display: flex;
+  flex-direction: column;
+}
+
+.analytics-stat-label {
+  font-size: 10px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  margin-bottom: 4px;
+  color: var(--text-muted);
+}
+
+.analytics-stat-value {
+  font-size: 24px;
+  font-weight: 900;
+  color: var(--text-primary);
+}
+
+.analytics-stat-value.value-secondary {
+  color: var(--text-secondary);
+}
+
+/* Category Progress */
+.analytics-cat-list {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.analytics-cat-text-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 6px;
+}
+
+.analytics-cat-label {
+  font-size: 10px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.analytics-cat-label.cat-text-work {
+  color: #60a5fa;
+}
+
+.analytics-cat-label.cat-text-health {
+  color: #4ade80;
+}
+
+.analytics-cat-label.cat-text-private {
+  color: #c084fc;
+}
+
+.analytics-cat-label.cat-text-general {
+  color: var(--text-muted);
+}
+
+.analytics-cat-percent {
+  font-size: 10px;
+  font-family: monospace;
+  font-weight: 700;
+  color: var(--text-muted);
+}
+
+.analytics-progress-container {
+  height: 6px;
+  width: 100%;
+  border-radius: 9999px;
+  overflow: hidden;
+  background-color: var(--bg-elevated);
+}
+
+.analytics-progress-fill {
+  height: 100%;
+  border-radius: 9999px;
+}
+
+.analytics-progress-fill.cat-bar-work {
+  background-color: #60a5fa;
+}
+
+.analytics-progress-fill.cat-bar-health {
+  background-color: #4ade80;
+}
+
+.analytics-progress-fill.cat-bar-private {
+  background-color: #c084fc;
+}
+
+.analytics-progress-fill.cat-bar-general {
+  background-color: var(--text-muted);
+}
+
+/* XP Chart */
+.analytics-chart-container {
+  height: 128px;
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 4px;
+  position: relative;
+}
+
+.analytics-chart-gridline {
+  position: absolute;
+  left: 0;
+  width: 100%;
+  border-top: 1px dashed var(--border);
+  opacity: 0.2;
+  pointer-events: none;
+}
+
+.analytics-chart-gridline.gridline-top {
+  top: 0;
+}
+
+.analytics-chart-gridline.gridline-middle {
+  top: 50%;
+}
+
+.analytics-chart-bar-column {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  position: relative;
+}
+
+.analytics-tooltip {
+  position: absolute;
+  top: -32px;
+  opacity: 0;
+  transition: opacity 150ms ease;
+  font-size: 9px;
+  font-weight: 700;
+  padding: 2px 6px;
+  border-radius: 4px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
+  pointer-events: none;
+  background-color: var(--text-primary);
+  color: var(--bg-primary);
+  white-space: nowrap;
+  z-index: 20;
+}
+
+.analytics-chart-bar-column:hover .analytics-tooltip {
+  opacity: 1;
+}
+
+.analytics-bar-wrapper {
+  width: 100%;
+  position: relative;
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  height: 80px;
+  border-radius: 2px 2px 0 0;
+  background-color: var(--bg-elevated);
+  overflow: hidden;
+}
+
+.analytics-bar-fill {
+  width: 100%;
+  border-radius: 2px 2px 0 0;
+  background-color: var(--accent);
+}
+
+.analytics-chart-label {
+  font-size: 8px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--text-muted);
+}

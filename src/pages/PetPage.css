@@ -1,0 +1,276 @@
+.pet-page-container {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 24px;
+  position: relative;
+  overflow: hidden;
+  background-color: var(--bg-primary);
+}
+
+.ambient-glow-wrapper {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  pointer-events: none;
+  z-index: 0;
+}
+
+.ambient-glow {
+  border-radius: 50%;
+  filter: blur(64px);
+  width: 500px;
+  height: 500px;
+}
+
+.ambient-glow.thriving {
+  background: radial-gradient(circle, rgba(74, 222, 128, 0.2) 0%, transparent 70%);
+}
+
+.ambient-glow.low {
+  background: radial-gradient(circle, rgba(245, 158, 11, 0.2) 0%, transparent 70%);
+}
+
+.ambient-glow.critical {
+  background: radial-gradient(circle, rgba(239, 68, 68, 0.2) 0%, transparent 70%);
+}
+
+.pet-content-wrapper {
+  position: relative;
+  z-index: 10;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+  max-width: 384px;
+}
+
+/* Streak Chip */
+.streak-chip {
+  margin-bottom: 40px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 20px;
+  border-radius: 9999px;
+  backdrop-filter: blur(4px);
+  background-color: var(--bg-surface);
+  border: 1px solid var(--border);
+}
+
+.streak-chip-text {
+  font-size: 12px;
+  font-weight: 900;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--text-secondary);
+}
+
+/* Pet Name */
+.pet-name-container {
+  margin-bottom: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 44px;
+}
+
+.pet-rename-input {
+  font-size: 24px;
+  font-weight: 900;
+  text-align: center;
+  background: transparent;
+  outline: none;
+  border: 1px solid var(--accent);
+  padding: 4px 8px;
+  border-radius: 8px;
+  width: 192px;
+  color: var(--text-primary);
+}
+
+.pet-rename-save-btn {
+  padding: 8px;
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: none;
+  background-color: var(--accent);
+  color: var(--bg-primary);
+  cursor: pointer;
+}
+
+.pet-name-display-btn {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: none;
+  background: transparent;
+  cursor: pointer;
+}
+
+.pet-name-title {
+  font-size: 30px;
+  font-weight: 900;
+  tracking: -0.025em;
+  padding: 0 24px;
+  color: var(--text-primary);
+}
+
+.pet-name-pencil-icon {
+  position: absolute;
+  right: 0;
+  opacity: 0;
+  transition: opacity 150ms ease;
+  color: var(--text-muted);
+}
+
+.pet-name-display-btn:hover .pet-name-pencil-icon {
+  opacity: 0.6;
+}
+
+.pet-type-subtitle {
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.15em;
+  margin-bottom: 24px;
+  color: var(--text-muted);
+}
+
+/* Pet Sprite */
+.pet-sprite-container {
+  position: relative;
+}
+
+.pet-under-glow {
+  position: absolute;
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 128px;
+  height: 32px;
+  border-radius: 50%;
+  filter: blur(24px);
+  opacity: 0.3;
+}
+
+.pet-under-glow.thriving {
+  background-color: #4ade80;
+}
+
+.pet-under-glow.low {
+  background-color: #f59e0b;
+}
+
+.pet-under-glow.critical {
+  background-color: #ef4444;
+}
+
+/* Health status label */
+.pet-health-status {
+  margin-top: 12px;
+  margin-bottom: 24px;
+  font-size: 12px;
+  font-weight: 900;
+  text-transform: uppercase;
+  letter-spacing: 0.15em;
+}
+
+.pet-health-status.thriving {
+  color: #4ade80;
+}
+
+.pet-health-status.low {
+  color: #f59e0b;
+}
+
+.pet-health-status.critical {
+  color: #ef4444;
+}
+
+/* Health Bar */
+.pet-health-bar-container {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.pet-health-bar-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 4px;
+}
+
+.pet-health-bar-label {
+  font-size: 10px;
+  font-weight: 900;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  color: var(--text-muted);
+}
+
+.pet-health-bar-percent {
+  font-size: 12px;
+  font-family: monospace;
+  font-weight: 900;
+  color: var(--text-primary);
+}
+
+.pet-health-bar-track {
+  height: 12px;
+  width: 100%;
+  border-radius: 9999px;
+  overflow: hidden;
+  background-color: var(--bg-elevated);
+}
+
+.pet-health-bar-fill {
+  height: 100%;
+  border-radius: 9999px;
+  position: relative;
+  overflow: hidden;
+}
+
+.pet-health-bar-fill.thriving {
+  background-color: #4ade80;
+}
+
+.pet-health-bar-fill.low {
+  background-color: #f59e0b;
+}
+
+.pet-health-bar-fill.critical {
+  background-color: #ef4444;
+}
+
+.pet-health-bar-fill::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background-color: rgba(255, 255, 255, 0.2);
+  width: 50%;
+  transform: skewX(12deg);
+}
+
+.pet-health-bar-ticks {
+  display: flex;
+  justify-content: space-between;
+  padding: 0 2px;
+}
+
+.pet-health-bar-tick {
+  font-size: 8px;
+  font-family: monospace;
+  color: var(--text-muted);
+  opacity: 0.4;
+}

@@ -3,12 +3,13 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { Plus, X } from 'lucide-react';
 import { useGame } from '../../context/GameContext';
 import { CATEGORIES, PRIORITIES } from './TaskList';
+import './tasks.css';
 
 const CATEGORY_BUTTON_CLASSES = {
-  general: 'bg-[var(--bg-elevated)] text-muted-var border border-var',
-  work: 'bg-[rgba(59,130,246,0.15)] text-[#60a5fa] border border-[rgba(59,130,246,0.3)]',
-  private: 'bg-[rgba(168,85,247,0.15)] text-[#c084fc] border border-[rgba(168,85,247,0.3)]',
-  health: 'bg-[rgba(34,197,94,0.15)] text-[#4ade80] border border-[rgba(34,197,94,0.3)]',
+  general: 'category-general',
+  work: 'category-work',
+  private: 'category-private',
+  health: 'category-health',
 };
 
 export default function AddTaskModal({ isOpen, onClose, selectedDate }) {
@@ -57,7 +58,7 @@ export default function AddTaskModal({ isOpen, onClose, selectedDate }) {
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             onClick={onClose}
-            className="fixed inset-0 z-50 flex items-center justify-center p-4 backdrop-blur-sm bg-black/60"
+            className="task-modal-backdrop"
           >
             {/* Modal Content */}
             <motion.div
@@ -66,23 +67,23 @@ export default function AddTaskModal({ isOpen, onClose, selectedDate }) {
               exit={{ opacity: 0, scale: 0.95, y: 10 }}
               transition={{ type: 'spring', bounce: 0, duration: 0.3 }}
               onClick={(e) => e.stopPropagation()} // Prevent closing when clicking inside
-              className="w-full max-w-md rounded-2xl p-6 shadow-2xl bg-card-var border border-var"
+              className="task-modal-content"
             >
-              <div className="flex items-center justify-between mb-5">
-                <h3 className="text-sm font-bold uppercase tracking-widest text-primary-var">
+              <div className="task-modal-header">
+                <h3 className="task-modal-title">
                   New Task
                 </h3>
                 <button
                   onClick={onClose}
-                  className="p-1 rounded-md transition-colors text-muted-var icon-btn-muted"
+                  className="task-modal-close-btn"
                 >
                   <X size={18} />
                 </button>
               </div>
 
-              <form onSubmit={handleAdd} className="space-y-5">
+              <form onSubmit={handleAdd} className="task-modal-form">
                 {/* Title input */}
-                <div>
+                <div className="task-modal-section">
                   <input
                     type="text"
                     className="input w-full"
@@ -97,19 +98,19 @@ export default function AddTaskModal({ isOpen, onClose, selectedDate }) {
                 </div>
 
                 {/* Category & Priority */}
-                <div className="space-y-4">
+                <div className="task-modal-section">
                   {/* Category */}
                   <div>
-                    <span className="block text-[10px] uppercase tracking-wider mb-2 text-muted-var">Category</span>
-                    <div className="flex gap-1.5 flex-wrap">
+                    <span className="task-modal-section-title">Category</span>
+                    <div className="task-modal-chips-row">
                       {CATEGORIES.map((c) => (
                         <button
                           key={c.value}
                           type="button"
                           onClick={() => setCategory(c.value)}
-                          className={`px-3 py-1.5 text-xs rounded-lg transition-all ${
-                            category === c.value ? 'opacity-100 ring-1 ring-inset' : 'opacity-40'
-                          } ${CATEGORY_BUTTON_CLASSES[c.value] || CATEGORY_BUTTON_CLASSES.general}`}
+                          className={`category-btn ${CATEGORY_BUTTON_CLASSES[c.value] || CATEGORY_BUTTON_CLASSES.general} ${
+                            category === c.value ? 'active' : ''
+                          }`}
                         >
                           {c.label}
                         </button>
@@ -119,21 +120,19 @@ export default function AddTaskModal({ isOpen, onClose, selectedDate }) {
 
                   {/* Priority */}
                   <div>
-                    <span className="block text-[10px] uppercase tracking-wider mb-2 text-muted-var">Priority</span>
-                    <div className="flex gap-1.5">
+                    <span className="task-modal-section-title">Priority</span>
+                    <div className="task-modal-chips-row">
                       {PRIORITIES.map((p) => (
                         <button
                           key={p.value}
                           type="button"
                           onClick={() => setPriority(p.value)}
-                          className={`px-3 py-1.5 rounded-lg transition-all flex items-center gap-1.5 text-xs text-primary-var ${
-                            priority === p.value ? 'bg-elevated-var border border-var opacity-100' : 'border border-transparent opacity-50'
-                          }`}
+                          className={`priority-btn ${priority === p.value ? 'active' : ''}`}
                         >
-                          <div className="flex-shrink-0 flex items-center justify-center w-4 h-4">
+                          <div className="task-item-priority-icon">
                             {p.icon}
                           </div>
-                          <span className="capitalize">{p.label}</span>
+                          <span style={{ textTransform: 'capitalize' }}>{p.label}</span>
                         </button>
                       ))}
                     </div>
@@ -145,10 +144,10 @@ export default function AddTaskModal({ isOpen, onClose, selectedDate }) {
                 )}
 
                 {/* Submit Button */}
-                <div className="pt-2">
+                <div style={{ paddingTop: '8px' }}>
                   <button
                     type="submit"
-                    className="btn-primary w-full flex items-center justify-center gap-2 py-3"
+                    className="task-submit-btn"
                     disabled={isAdding || !title.trim()}
                   >
                     <Plus size={16} />

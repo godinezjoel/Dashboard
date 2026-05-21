@@ -1,0 +1,12 @@
+.layout-main {
+  overflow-y: auto;
+  position: relative;
+  background-color: var(--bg-primary);
+}
+
+.layout-content {
+  max-width: 1400px;
+  margin: 0 auto;
+  width: 100%;
+  padding: 0 24px;
+}

@@ -3,6 +3,7 @@ import { motion } from 'framer-motion';
 import { supabase } from '../supabase/client';
 import toast from 'react-hot-toast';
 import { Hexagon, Rocket, LogIn, Egg } from 'lucide-react';
+import './AuthPage.css';
 
 export default function AuthPage() {
   const [mode, setMode] = useState('login'); // 'login' | 'signup'
@@ -38,43 +39,39 @@ export default function AuthPage() {
   }
 
   return (
-    <div className="min-h-screen flex items-center justify-center p-4 bg-primary-var">
+    <div className="auth-page-container">
       {/* Background grid glow */}
-      <div className="fixed inset-0 pointer-events-none bg-[radial-gradient(ellipse_80%_50%_at_50%_-20%,rgba(139,92,246,0.15)_0%,transparent_60%)]" />
+      <div className="auth-bg-glow" />
 
       <motion.div
         initial={{ opacity: 0, y: 24, scale: 0.97 }}
         animate={{ opacity: 1, y: 0, scale: 1 }}
         transition={{ type: 'spring', stiffness: 260, damping: 20 }}
-        className="w-full max-w-sm relative"
+        className="auth-card-wrapper"
       >
         {/* Card */}
-          <div className="card p-8 rounded-2xl shadow-[0_24px_64px_rgba(0,0,0,0.6)]">
+        <div className="card auth-card-custom">
           {/* Logo */}
-          <div className="text-center mb-8">
-            <div
-              className="w-16 h-16 rounded-2xl flex items-center justify-center text-3xl mx-auto mb-4 text-white bg-black border border-neutral-800"
-            >
+          <div className="auth-logo-section">
+            <div className="auth-logo-badge">
               <Hexagon size={32} strokeWidth={1.5} />
             </div>
-            <h1 className="text-2xl font-bold text-primary-var">
+            <h1 className="auth-title">
               Life-OS
             </h1>
-            <p className="text-sm mt-1 text-muted-var">
+            <p className="auth-subtitle">
               Your gamified productivity companion
             </p>
           </div>
 
           {/* Tab toggle */}
-          <div className="flex gap-1 mb-6 p-1 rounded-xl bg-surface-var">
+          <div className="auth-tabs">
             {['login', 'signup'].map((m) => (
               <button
                 key={m}
                 onClick={() => setMode(m)}
                 id={`auth-tab-${m}`}
-                className={`flex-1 py-2 rounded-lg text-sm font-medium transition-all capitalize ${
-                  mode === m ? 'bg-elevated-var text-accent-var' : 'text-muted-var'
-                }`}
+                className={`auth-tab-btn ${mode === m ? 'active' : ''}`}
               >
                 {m}
               </button>
@@ -82,14 +79,15 @@ export default function AuthPage() {
           </div>
 
           {/* Form */}
-          <form onSubmit={handleSubmit} className="space-y-3">
+          <form onSubmit={handleSubmit} className="auth-form">
             {mode === 'signup' && (
               <motion.div
                 initial={{ opacity: 0, height: 0 }}
                 animate={{ opacity: 1, height: 'auto' }}
                 exit={{ opacity: 0, height: 0 }}
+                className="auth-form-field"
               >
-                <label className="block text-xs mb-1.5 text-muted-var">
+                <label className="auth-label">
                   Username (optional)
                 </label>
                 <input
@@ -104,8 +102,8 @@ export default function AuthPage() {
               </motion.div>
             )}
 
-            <div>
-              <label className="block text-xs mb-1.5 text-muted-var">
+            <div className="auth-form-field">
+              <label className="auth-label">
                 Email
               </label>
               <input
@@ -120,8 +118,8 @@ export default function AuthPage() {
               />
             </div>
 
-            <div>
-              <label className="block text-xs mb-1.5 text-muted-var">
+            <div className="auth-form-field">
+              <label className="auth-label">
                 Password
               </label>
               <input
@@ -139,7 +137,7 @@ export default function AuthPage() {
 
             <button
               type="submit"
-              className="btn-primary w-full mt-2 py-3 text-sm font-semibold flex items-center justify-center gap-2"
+              className="btn-primary auth-submit-btn"
               disabled={loading}
               id="auth-submit"
             >
@@ -152,15 +150,15 @@ export default function AuthPage() {
           </form>
 
           {/* Footer note */}
-          <p className="text-center text-xs mt-5 flex items-center justify-center gap-1 text-muted-var">
+          <p className="auth-footer-note">
             {mode === 'signup'
-              ? <>A pet will be waiting for you <Egg size={12} className="inline" /></>
+              ? <>A pet will be waiting for you <Egg size={12} className="auth-footer-icon" /></>
               : "Don't have an account? "}
             {mode === 'login' && (
-                <button
-                  onClick={() => setMode('signup')}
-                  className="underline text-accent-var"
-                >
+              <button
+                onClick={() => setMode('signup')}
+                className="auth-footer-link"
+              >
                 Sign up free
               </button>
             )}
