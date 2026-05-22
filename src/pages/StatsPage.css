@@ -197,3 +197,28 @@
   color: #34d399; /* emerald-400 */
   font-weight: 600;
 }
+
+@media (max-width: 767px) {
+  .stats-page-container {
+    padding: 16px 16px calc(24px + env(safe-area-inset-bottom, 0px)) 16px;
+  }
+  .stats-grid {
+    grid-template-columns: 1fr;
+    gap: 10px;
+  }
+  .milestones-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 8px;
+  }
+  .level-info-row {
+    gap: 12px;
+  }
+  .level-badge {
+    width: 56px;
+    height: 56px;
+    font-size: 20px;
+  }
+  .level-title {
+    font-size: 20px;
+  }
+}

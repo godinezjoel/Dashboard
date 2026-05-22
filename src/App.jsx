@@ -1,3 +1,4 @@
+import { useState, useEffect } from 'react';
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import { Toaster } from 'react-hot-toast';
 import { GameProvider, useGame } from './context/GameContext';
@@ -7,6 +8,8 @@ import ShopPage from './components/shop/ShopPage';
 import StatsPage from './pages/StatsPage';
 import AuthPage from './pages/AuthPage';
 import PetPage from './pages/PetPage';
+import SchoolGradesPage from './pages/SchoolGradesPage';
+import SchoolExamsPage from './pages/SchoolExamsPage';
 
 
 // ── Auth Guard ─────────────────────────────────────────────────────────────────
@@ -31,7 +34,9 @@ function ProtectedRoutes() {
     <Routes>
       <Route element={<DashboardLayout />}>
         <Route index element={<Dashboard />} />
-
+        <Route path="school" element={<Navigate to="/school/grades" replace />} />
+        <Route path="school/grades" element={<SchoolGradesPage />} />
+        <Route path="school/exams" element={<SchoolExamsPage />} />
         <Route path="shop" element={<ShopPage />} />
         <Route path="stats" element={<StatsPage />} />
         <Route path="pet" element={<PetPage />} />
@@ -41,6 +46,14 @@ function ProtectedRoutes() {
 }
 
 export default function App() {
+  const [isMobile, setIsMobile] = useState(window.innerWidth < 768);
+
+  useEffect(() => {
+    const handleResize = () => setIsMobile(window.innerWidth < 768);
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
+
   return (
     <GameProvider>
       <BrowserRouter>
@@ -52,7 +65,7 @@ export default function App() {
 
       {/* Global toast notifications */}
       <Toaster
-        position="bottom-center"
+        position={isMobile ? "top-center" : "bottom-center"}
         toastOptions={{
           className: 'toast-theme',
         }}

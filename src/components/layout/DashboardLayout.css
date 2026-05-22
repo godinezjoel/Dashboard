@@ -10,3 +10,18 @@
   width: 100%;
   padding: 0 24px;
 }
+
+@media (max-width: 767px) {
+  .dashboard-grid {
+    grid-template-columns: 1fr;
+  }
+  .layout-main {
+    height: 100vh;
+    padding-top: 56px; /* MobileHeader height */
+    padding-bottom: calc(64px + env(safe-area-inset-bottom, 0px)); /* MobileNav height + notch safety */
+  }
+  .layout-content {
+    padding: 0 16px;
+    max-width: 100%;
+  }
+}

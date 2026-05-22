@@ -274,3 +274,28 @@
   color: var(--text-muted);
   opacity: 0.4;
 }
+
+@media (max-width: 767px) {
+  .pet-page-container {
+    padding: 16px 16px calc(24px + env(safe-area-inset-bottom, 0px)) 16px;
+  }
+  .ambient-glow {
+    width: min(360px, 90vw);
+    height: min(360px, 90vw);
+    filter: blur(48px);
+  }
+  .streak-chip {
+    margin-bottom: 20px;
+    padding: 6px 16px;
+  }
+  .pet-name-title {
+    font-size: 26px;
+  }
+  .pet-type-subtitle {
+    margin-bottom: 16px;
+  }
+  .pet-health-status {
+    margin-top: 8px;
+    margin-bottom: 16px;
+  }
+}

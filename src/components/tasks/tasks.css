@@ -64,7 +64,7 @@
   left: 0;
   right: 0;
   bottom: 0;
-  z-index: 50;
+  z-index: 1000;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -687,7 +687,7 @@
   left: 0;
   right: 0;
   bottom: 0;
-  z-index: 50;
+  z-index: 1000;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -1098,4 +1098,61 @@
 .task-submit-btn:disabled {
   opacity: 0.5;
   cursor: not-allowed;
+}
+
+@media (max-width: 767px) {
+  .kanban-grid {
+    grid-template-columns: 1fr;
+    gap: 0;
+  }
+  .kanban-column {
+    min-height: auto;
+  }
+  .task-modal-backdrop, .task-detail-modal-wrapper {
+    padding: 0;
+  }
+  .task-modal-content {
+    width: 100%;
+    max-width: 100%;
+    height: 100vh;
+    max-height: 100vh;
+    border-radius: 0;
+    border: none;
+    padding: 20px 16px calc(20px + env(safe-area-inset-bottom, 0px)) 16px;
+    display: flex;
+    flex-direction: column;
+    overflow-y: auto;
+  }
+  .task-detail-modal-container {
+    width: 100%;
+    max-width: 100%;
+    height: 100vh;
+    max-height: 100vh;
+    border-radius: 0;
+    border: none;
+    padding: 20px 16px calc(20px + env(safe-area-inset-bottom, 0px)) 16px;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+  }
+  .task-detail-modal-header {
+    padding: 0 0 16px 0;
+  }
+  .task-detail-body {
+    flex: 1;
+    overflow-y: auto;
+    padding: 16px 0;
+  }
+  .task-detail-footer {
+    padding: 16px 0 0 0;
+  }
+  .task-modal-form {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+  }
+  .task-modal-form > div:last-child {
+    margin-top: auto;
+    padding-bottom: env(safe-area-inset-bottom, 16px);
+  }
 }

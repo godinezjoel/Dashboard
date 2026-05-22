@@ -210,3 +210,23 @@
 .floating-add-btn:active {
   transform: scale(0.95);
 }
+
+@media (max-width: 767px) {
+  .dashboard-view-header {
+    padding: 16px 16px 8px;
+  }
+  .dashboard-list-grid, .dashboard-board-grid {
+    padding: 8px 16px 16px;
+    gap: 16px;
+  }
+  .floating-add-btn {
+    bottom: calc(64px + 16px + env(safe-area-inset-bottom, 0px));
+    right: 16px;
+    width: 48px;
+    height: 48px;
+  }
+  .column-header-row {
+    margin-top: 16px;
+    margin-bottom: 12px;
+  }
+}

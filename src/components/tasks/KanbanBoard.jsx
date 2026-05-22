@@ -168,6 +168,7 @@ export default function KanbanBoard() {
   const { tasks, updateTask, completeTask } = useGame();
   const [dragOverCol, setDragOverCol] = useState(null);
   const [selectedTask, setSelectedTask] = useState(null);
+  const [activeTab, setActiveTab] = useState('open');
 
   // Exclude already-completed tasks (is_done = true), they live in history
   const columnTasks = {
@@ -208,19 +209,40 @@ export default function KanbanBoard() {
 
   return (
     <>
-      <div className="kanban-grid">
+      {/* Mobile Column Selector */}
+      <div className="flex md:hidden bg-[var(--bg-surface)] p-1 rounded-xl border border-[var(--border)] mb-4">
         {COLUMNS.map(col => (
-          <KanbanColumn
+          <button
             key={col.id}
-            column={col}
-            tasks={columnTasks[col.id] || []}
-            isDragOver={dragOverCol === col.id}
-            onDragOver={e => handleDragOver(e, col.id)}
-            onDragLeave={handleDragLeave}
-            onDrop={e => handleDrop(e, col.id)}
-            onDoubleClick={setSelectedTask}
-          />
+            onClick={() => setActiveTab(col.status)}
+            className={`flex-1 py-2 text-xs font-semibold rounded-lg transition-all duration-150 ${
+              activeTab === col.status
+                ? 'bg-[var(--bg-elevated)] text-[var(--text-primary)] shadow-sm'
+                : 'text-[var(--text-muted)]'
+            }`}
+          >
+            {col.label} ({columnTasks[col.id]?.length || 0})
+          </button>
         ))}
+      </div>
+
+      <div className="kanban-grid">
+        {COLUMNS.map(col => {
+          const isHiddenOnMobile = activeTab !== col.status;
+          return (
+            <div key={col.id} className={isHiddenOnMobile ? 'hidden md:block' : 'block'}>
+              <KanbanColumn
+                column={col}
+                tasks={columnTasks[col.id] || []}
+                isDragOver={dragOverCol === col.id}
+                onDragOver={e => handleDragOver(e, col.id)}
+                onDragLeave={handleDragLeave}
+                onDrop={e => handleDrop(e, col.id)}
+                onDoubleClick={setSelectedTask}
+              />
+            </div>
+          );
+        })}
       </div>
 
       {/* Modal — isOpen is driven by whether a task is selected */}

@@ -10,6 +10,12 @@
   border-right: 1px solid var(--border);
 }
 
+@media (max-width: 767px) {
+  .sidebar {
+    display: none !important;
+  }
+}
+
 .sidebar-header {
   padding: 24px 20px 16px;
 }

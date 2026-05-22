@@ -4,6 +4,7 @@ import {
   CheckSquare,
   ShoppingBag,
   BarChart2,
+  GraduationCap,
   LogOut,
   Zap,
   Heart,
@@ -13,7 +14,8 @@ import {
   Moon,
   Wrench,
   Plus,
-  Minus
+  Minus,
+  Calendar
 } from 'lucide-react';
 import { useGame } from '../../context/GameContext';
 import { calculateLevelPercent, xpToNextLevel, getPetHealthState, calculateCurrentHealth } from '../../lib/gameLogic';
@@ -27,6 +29,11 @@ const PERSONAL_ITEMS = [
 
 const DASHBOARD_ITEMS = [
   { to: '/',      icon: CheckSquare, label: 'Tasks'  },
+];
+
+const SCHOOL_ITEMS = [
+  { to: '/school/grades', icon: GraduationCap, label: 'Grade Tracker' },
+  { to: '/school/exams',  icon: Calendar,      label: 'Exam Prep'     },
 ];
 
 const PET_HEALTH_TEXT_CLASS = {
@@ -164,6 +171,20 @@ export default function Sidebar() {
             key={to}
             to={to}
             end={to === '/'}
+            className={({ isActive }) =>
+              `nav-link-item ${isActive ? 'active' : ''}`
+            }
+          >
+            <Icon size={16} />
+            <span>{label}</span>
+          </NavLink>
+        ))}
+
+        <div className="nav-group-title">School</div>
+        {SCHOOL_ITEMS.map(({ to, icon: Icon, label }) => (
+          <NavLink
+            key={to}
+            to={to}
             className={({ isActive }) =>
               `nav-link-item ${isActive ? 'active' : ''}`
             }

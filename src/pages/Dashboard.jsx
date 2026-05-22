@@ -1,4 +1,4 @@
-import { useState, useCallback } from 'react';
+import { useState, useCallback, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { useGame } from '../context/GameContext';
 import TaskList from '../components/tasks/TaskList';
@@ -56,11 +56,22 @@ export default function Dashboard() {
   const [selectedDate, setSelectedDate] = useState(null);
   const [view, setViewState] = useState(() => localStorage.getItem(VIEW_KEY) || 'list');
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isMobile, setIsMobile] = useState(() => window.innerWidth < 768);
+
+  useEffect(() => {
+    function handleResize() {
+      setIsMobile(window.innerWidth < 768);
+    }
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
 
   const setView = useCallback((v) => {
     setViewState(v);
     localStorage.setItem(VIEW_KEY, v);
   }, []);
+
+  const activeView = isMobile ? 'list' : view;
 
   const doneTasks = tasks
     .filter((t) => t.is_done && t.completed_at)
@@ -120,16 +131,20 @@ export default function Dashboard() {
     <div className="dashboard-page">
 
       {/* View toggle header */}
-      <div className="dashboard-view-header">
-        <ViewToggle view={view} setView={setView} />
-      </div>
+      {!isMobile && (
+        <div className="dashboard-view-header">
+          <ViewToggle view={view} setView={setView} />
+        </div>
+      )}
 
       {/* LIST VIEW */}
-      {view === 'list' && (
+      {activeView === 'list' && (
         <div className="dashboard-list-grid">
-          <div className="dashboard-sidebar-column">
-            <AnalyticsPanel />
-          </div>
+          {!isMobile && (
+            <div className="dashboard-sidebar-column">
+              <AnalyticsPanel />
+            </div>
+          )}
           <div>
             <TaskList selectedDate={selectedDate} onClearDate={() => setSelectedDate(null)} />
           </div>
@@ -138,7 +153,7 @@ export default function Dashboard() {
       )}
 
       {/* BOARD VIEW */}
-      {view === 'board' && (
+      {activeView === 'board' && (
         <div className="dashboard-board-grid">
           <div>
             <KanbanBoard />

@@ -23,6 +23,7 @@
   --shadow-card: 0 4px 6px -1px rgba(0, 0, 0, 0.2), 0 2px 4px -2px rgba(0, 0, 0, 0.2);
   --shadow-btn: 0 0 16px var(--accent-glow);
   --shadow-btn-hover: 0 0 24px rgba(99, 102, 241, 0.4);
+  --bg-glass: rgba(9, 9, 11, 0.7);
 }
 
 [data-theme="light"] {
@@ -47,6 +48,7 @@
   /* Stronger shadows */
   --shadow-btn: 0 4px 10px var(--accent-glow);
   --shadow-btn-hover: 0 6px 14px rgba(79, 70, 229, 0.25);
+  --bg-glass: rgba(244, 244, 245, 0.7);
 }
 
 /* ── Base Reset ────────────────────────────────────────────────────────────── */
@@ -376,4 +378,25 @@ body {
   color: var(--accent);
   border-left: 2px solid var(--accent);
   box-shadow: inset 0 0 20px var(--accent-subtle);
+}
+
+@media (max-width: 767px) {
+  /* Prevent horizontal overflow */
+  html {
+    overflow-x: hidden;
+  }
+  
+  /* Larger touch targets for mobile usability (Apple HIG/Material standard) */
+  button:not(.subtask-checkbox):not(.topic-checkbox):not(.subtask-delete-btn):not(.subtask-add-btn):not(.task-modal-close-btn):not(.exam-modal-close):not(.grade-delete-btn):not(.topic-delete-btn):not(.bulk-import-toggle-btn):not(.view-toggle-btn):not(.clear-history-btn),
+  a,
+  [role="button"],
+  select,
+  input:not([type="checkbox"]):not([type="radio"]) {
+    min-height: 44px;
+  }
+
+  /* Typography tweak for readability */
+  body {
+    font-size: 15px;
+  }
 }
